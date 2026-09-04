@@ -1,7 +1,9 @@
+import Navbar from ".././components/navbar.tsx"
+
 export default function App() {
   return (
-    <div className = "w-full h-md bg-black">
-      
+    <div>
+      <Navbar />
     </div>
   );
 }
