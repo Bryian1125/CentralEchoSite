@@ -6,8 +6,20 @@
 }
 
 @font-face {
-    font-family: 'Hefring Slab';
+    font-family: 'Hefring Slab Regular';
+    src: url('./fonts/HefringSlab-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Hefring Slab Medium';
     src: url('./fonts/HefringSlab-Medium.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Hefring Slab Bold';
+    src: url('./fonts/HefringSlab-Bold.woff2') format('woff2');
     font-display: swap;
 }
 
@@ -20,7 +32,9 @@
 @import "tailwindcss";
 
 @theme {
-    --font-hefring: 'Hefring Slab', serif;
+    --font-hefring-regular: 'Hefring Slab Regular', serif;
+    --font-hefring-mediun: 'Hefring Slab Medium', serif;
+    --font-hefring-bold: 'Hefring Slab Bold', serif;
     --font-neuehaas: "Neue Haas Grotesk", sans-serif;
     --color-background: var(--background);
     --color-foreground: var(--foreground);
