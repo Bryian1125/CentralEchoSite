@@ -31,7 +31,6 @@ export default function HeroBanner() {
             </div>
 
             <div className = "flex flex-row items-center justify-center w-full h-xl mt-10 mb-10 gap-12 overflow-x-clip">
-                <CarouselCard />
                 <CarouselCard
                     category="OPINION"
                     date="August 11, 2026"
@@ -39,7 +38,20 @@ export default function HeroBanner() {
                               A Diversion Road Reality Check"
                     author="Author Name"
                 />
-                <CarouselCard />
+                <CarouselCard
+                    category="OPINION"
+                    date="August 11, 2026"
+                    title=" Road Rules vs. Youthful Drive: 
+                              A Diversion Road Reality Check"
+                    author="Author Name"
+                />
+                <CarouselCard
+                    category="OPINION"
+                    date="August 11, 2026"
+                    title=" Road Rules vs. Youthful Drive: 
+                    A Diversion Road Reality Check"
+                    author="Author Name"
+                />
             </div>
         </div>
 
