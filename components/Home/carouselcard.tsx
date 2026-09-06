@@ -35,3 +35,4 @@ export default function CarouselCard({category, date, title, author}: CarouselCa
         </div>
     )
 }
+
