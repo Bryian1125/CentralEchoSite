@@ -1,6 +1,5 @@
 type HeaderData = {
     title: string
-    link: string
 }
 
 export default function DisplayHeader({title, link}: HeaderData) {
