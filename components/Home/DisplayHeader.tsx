@@ -2,7 +2,7 @@ type HeaderData = {
     title: string
 }
 
-export default function DisplayHeader({title, link}: HeaderData) {
+export default function DisplayHeader({title}: HeaderData) {
     return(
         <div className ="flex flex-col w-full h-auto items-center justify-end mt-24 mb-12">
             <div className = "flex flex-row items-center justify-between w-1/2">
