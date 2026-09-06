@@ -3,7 +3,6 @@ type CarouselCardData = {
     date: string
     title: string
     author: string
-    img: string
 }
 
 export default function CarouselCard({category, date, title, author}: CarouselCardData) {
