@@ -1,9 +1,8 @@
-import Navbar from ".././components/navbar.tsx"
-import HeroBanner from ".././components/Home/herobanner.tsx"
-import OpinionDisplay from ".././components/Home/OpinionDisplay.tsx"
-import FeatureDisplay from ".././components/Home/FeatureDisplay.tsx"
-import LiteraryDisplay from ".././components/Home/LiteraryDisplay"
-import SportsDisplay from ".././components/Home/SportsDisplay.tsx"
+import HeroBanner from "@/components/Home/HeroBanner"
+import OpinionDisplay from "@/components/Home/OpinionDisplay"
+import FeatureDisplay from "@/components/Home/FeatureDisplay"
+import LiteraryDisplay from "@/components/Home/LiteraryDisplay"
+import SportsDisplay from "@/components/Home/SportsDisplay"
 
 const categories = [
     "Opinion",
@@ -15,7 +14,6 @@ const categories = [
 export default function App() {
   return (
     <div>
-          <Navbar />
           <HeroBanner />
           <OpinionDisplay
               link = "opinion"
