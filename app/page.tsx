@@ -5,12 +5,21 @@ import FeatureDisplay from ".././components/Home/FeatureDisplay.tsx"
 import LiteraryDisplay from ".././components/Home/LiteraryDisplay"
 import SportsDisplay from ".././components/Home/SportsDisplay.tsx"
 
+const categories = [
+    "Opinion",
+    "Feature",
+    "Literary",
+    "Sports"
+];
+
 export default function App() {
   return (
     <div>
           <Navbar />
           <HeroBanner />
-          <OpinionDisplay />
+          <OpinionDisplay
+              link = "opinion"
+          />
           <FeatureDisplay />
           <LiteraryDisplay />
           <SportsDisplay />
