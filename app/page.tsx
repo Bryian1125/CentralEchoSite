@@ -1,8 +1,8 @@
-import HeroBanner from "@/components/Home/HeroBanner"
-import OpinionDisplay from "@/components/Home/OpinionDisplay"
-import FeatureDisplay from "@/components/Home/FeatureDisplay"
-import LiteraryDisplay from "@/components/Home/LiteraryDisplay"
-import SportsDisplay from "@/components/Home/SportsDisplay"
+import HeroBanner from "../components/Home/HeroBanner"
+import OpinionDisplay from "../components/Home/OpinionDisplay"
+import FeatureDisplay from "../components/Home/FeatureDisplay"
+import LiteraryDisplay from "../components/Home/LiteraryDisplay"
+import SportsDisplay from "../components/Home/SportsDisplay"
 
 const categories = [
     "Opinion",
