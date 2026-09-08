@@ -20,9 +20,15 @@ export default function App() {
           <OpinionDisplay
               link = "opinion"
           />
-          <FeatureDisplay />
-          <LiteraryDisplay />
-          <SportsDisplay />
+          <FeatureDisplay
+              link = "feature"
+          />
+          <LiteraryDisplay
+              link = "literary"
+          />
+          <SportsDisplay
+              link = "sports"
+          />
     </div>
   );
 }

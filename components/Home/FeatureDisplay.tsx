@@ -2,11 +2,16 @@ import DisplayHeader from "./DisplayHeader.tsx"
 import SmallDisplayCard from "./SmallDisplayCard.tsx"
 import LargeDisplayCard from "./LargeDisplayCard.tsx"
 
-export default function FeatureDisplay() {
+type Data = {
+    link: string
+}
+
+export default function FeatureDisplay({link}: Data) {
     return(
         <div className = "flex flex-col items-center justify-center mt-10 mb-10">
             <DisplayHeader
                 title = "FEATURE"
+                link = {link}
             />
             <div className = "flex flex-row gap-6 h-[370]">
                 <div className = "flex flex-col h-full justify-between">
