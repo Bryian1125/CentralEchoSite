@@ -1,8 +1,8 @@
-import CarouselCard from "./carouselcard.tsx"
+import CarouselCard from "./CarouselCard.tsx"
 
 export default function HeroBanner() {
     return(
-        <div className = "flex flex-col items-center justify-center w-full h-330 bg-[#232383] gap-4">
+        <div className = "flex flex-col items-center justify-center w-full h-350 bg-[#232383] pt-20 gap-4">
             {/*ART SPLASH*/}
             <div className = "flex flex-row items-center justify-center w-full gap-4 mt-6 mb-16 mr-20">
                 <div className = "flex flex-col items-center justify-center w-200 h-full">
