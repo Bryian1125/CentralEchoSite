@@ -27,19 +27,28 @@ export default function Navbar() {
             />
 
             <motion.div
-                animate = {{y: visible ? 0 : "-100%"}}
+                animate = {{y: visible ? 0 : "-150%"}}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className = "fixed z-5 top-0 pl-15 pr-15 flex items-center justify-between w-full h-22 bg-[#232383]">
+                className = "fixed z-5 top-3 pl-2 pr-5 inset-x-75 flex items-center justify-between h-13 bg-[#FFFFFFE6] rounded-full border-5 border-white shadow outline-1 outline-[#7a7a7a80]">
                 <button className ="left-0 flex flex-row gap-2 items-center justify-center">
-                    <img className = "w-8 h-8" src = {"/assets/celogo.png"}></img>
-                    <img className = "w-16 h-8" src = {"/assets/ceheader.png"}></img>
+                    <div
+                        className="bg-[#2794d8] w-8 h-8 [mask-image:url('/assets/celogo.png')] [mask-size:contain] [mask-repeat:no-repeat]"
+                    />
+                    <div
+                        className="bg-[#2794d8] w-16 h-8 [mask-image:url('/assets/ceheader.png')] [mask-size:contain] [mask-repeat:no-repeat"
+                    />
+
                 </button>
 
-                <div className = "flex pl-3 pr-3 items-center rounded-lg w-128 h-9 bg-white">
-                    <img className = "w-5 h-5" src = {"/assets/search.png"}></img>
+                <div className = "flex pl-3 pr-3 items-center rounded-full w-2/3 h-8 bg-[#FFFFFF]">
+                    <div
+                        className="bg-[#2794d8] w-5 h-5 [mask-image:url('/assets/search.png')] [mask-size:contain] [mask-repeat:no-repeat]"
+                    />
                 </div>
                 <button>
-                    <img className = "flex ml-18 w-7 h-7" src = {"/assets/hamburger.png"}></img>
+                    <div
+                        className="bg-[#2794d8] w-4 h-4 [mask-image:url('/assets/hamburger.png')] [mask-size:contain] [mask-repeat:no-repeat]"
+                    />
                 </button>
             </motion.div>
         </>
