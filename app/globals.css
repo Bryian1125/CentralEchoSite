@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-    --background: #f1f2f1;
-    --foreground: #f1f2f1;
+    --background: #FFFFFF;
+    --foreground: #0f172a;
+    --primary: #2794d8;
+    --secondary: #ceddea;
+    --text: #0f172a;
+    --border: #ceddea;
 }
 
 @font-face {
@@ -38,6 +42,10 @@
     --font-neuehaas: "Neue Haas Grotesk", sans-serif;
     --color-background: var(--background);
     --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-secondary: var(--secondary);
+    --color-text: var(--text);
+    --color-border: var(--border);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
 }
