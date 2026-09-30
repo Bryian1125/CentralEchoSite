@@ -2,13 +2,17 @@
 
 import { useState, useRef } from "react";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
+import { usePathname } from "next/navigation"
 
 export default function Navbar() {
     const [visible, setVisible] = useState(true);
     const lastScrollY = useRef(0);
     const { scrollY } = useScroll();
+    const pathname = usePathname();
 
     useMotionValueEvent(scrollY, "change", (latest) => {
+        if (pathname !== "/") {return}
+
         if (latest < 10) {
             setVisible(true);
         } else if (latest > lastScrollY.current) {
@@ -24,6 +28,7 @@ export default function Navbar() {
             <div
                 className="fixed top-0 left-0 w-full h-30 z-10"
                 onMouseEnter={() => setVisible(true)}
+                onMouseLeave={() => setVisible(false)}
             />
 
             <motion.div
