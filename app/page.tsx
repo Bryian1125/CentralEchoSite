@@ -1,6 +1,6 @@
-import HeroBanner from "@/components/Home/HeroBanner"
-import CategoryDisplay from "@/components/Home/CategoryDisplay"
-import LiteraryDisplay from "@/components/Home/LiteraryDisplay"
+import HeroBanner from "../components/Home/HeroBanner"
+import CategoryDisplay from "../components/Home/CategoryDisplay"
+import LiteraryDisplay from "../components/Home/LiteraryDisplay"
 
 export default function App() {
   return (
