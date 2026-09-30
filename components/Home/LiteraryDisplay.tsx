@@ -12,7 +12,7 @@ export default function LiteraryDisplay({link}: Data) {
                 title = "LITERARY"
                 link = {link}
             />
-            <div className = "flex flex-row gap-3 w-full h-[450] justify-center items-align">
+            <div className = "flex flex-col md:flex-row gap-3 w-full h-auto md:h-[450] justify-center items-center md:items-align">
                 <LiteraryDisplayCard />
                 <LiteraryDisplayCard />
                 <LiteraryDisplayCard />

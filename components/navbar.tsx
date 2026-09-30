@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 
 export default function Navbar() {
     const [visible, setVisible] = useState(true);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const lastScrollY = useRef(0);
     const { scrollY } = useScroll();
     const pathname = usePathname();
@@ -34,7 +35,7 @@ export default function Navbar() {
             <motion.div
                 animate = {{y: visible ? 0 : "-150%"}}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className = "fixed z-5 top-3 pl-3 pr-5 inset-x-75 flex items-center justify-between h-13 bg-background rounded-full border-1 border-border shadow-lg">
+                className = "fixed z-5 top-3 pl-3 pr-5 inset-x-75 md:inset-x-75 flex items-center justify-between h-13 bg-background rounded-full border-1 border-border shadow-lg">
                 <button className ="left-0 flex flex-row gap-2 items-center justify-center">
                     <div
                         className="bg-primary w-8 h-8 [mask-image:url('/assets/celogo.png')] [mask-size:contain] [mask-repeat:no-repeat]"
@@ -45,17 +46,33 @@ export default function Navbar() {
 
                 </button>
 
-                <div className = "flex pl-3 pr-3 items-center rounded-full w-2/3 h-8 bg-background">
+                <div className = "hidden md:flex pl-3 pr-3 items-center rounded-full w-2/3 h-8 bg-background">
                     <div
                         className="bg-primary w-5 h-5 [mask-image:url('/assets/search.png')] [mask-size:contain] [mask-repeat:no-repeat]"
                     />
                 </div>
-                <button>
+                <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                     <div
                         className="bg-primary w-4 h-4 [mask-image:url('/assets/hamburger.png')] [mask-size:contain] [mask-repeat:no-repeat]"
                     />
                 </button>
             </motion.div>
+
+            {mobileMenuOpen && (
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="fixed top-16 left-4 right-4 z-50 bg-background rounded-2xl border-1 border-border shadow-lg p-4 md:hidden"
+                >
+                    <div className="flex flex-col gap-3">
+                        <a href="/" className="text-lg font-['Hefring_Slab_Bold']">Home</a>
+                        <a href="/opinion" className="text-lg font-['Hefring_Slab_Regular']">Opinion</a>
+                        <a href="/feature" className="text-lg font-['Hefring_Slab_Regular']">Feature</a>
+                        <a href="/literary" className="text-lg font-['Hefring_Slab_Regular']">Literary</a>
+                        <a href="/sports" className="text-lg font-['Hefring_Slab_Regular']">Sports</a>
+                    </div>
+                </motion.div>
+            )}
         </>
     )
 }
