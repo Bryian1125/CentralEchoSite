@@ -13,7 +13,7 @@ export default function OpinionDisplay({link}: Data) {
                 title = "OPINION"
                 link = {link}
             />
-            <div className = "flex flex-row gap-6 h-[370]">
+            <div className = "flex flex-row gap-6 h-[550]">
                 <div className = "flex flex-col h-full justify-between">
                     <SmallDisplayCard />
                     <SmallDisplayCard />

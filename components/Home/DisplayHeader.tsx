@@ -8,7 +8,7 @@ type HeaderData = {
 export default function DisplayHeader({title, link}: HeaderData) {
     return(
         <div className ="flex flex-col w-full h-auto items-center justify-end mt-24 mb-12">
-            <div className = "flex flex-row items-center justify-between w-1/2">
+            <div className = "flex flex-row items-center justify-between w-2/3">
                 <h1 className = "text-foreground text-4xl font-['Hefring_Slab_Bold']">{title}</h1>
                 <Link href = {`/categories/${link}`}>
                     <button className = "flex flex-row items-center justify-center gap-2">
@@ -19,7 +19,7 @@ export default function DisplayHeader({title, link}: HeaderData) {
                     </button>
                 </Link>
             </div>
-            <div className = "bg-foreground w-1/2 h-[2px]">
+            <div className = "bg-foreground w-2/3 h-[2px]">
             </div>
         </div>
     )
