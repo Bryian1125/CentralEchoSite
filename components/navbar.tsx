@@ -22,7 +22,7 @@ export default function Navbar() {
     return (
         <>
             <div
-                className="fixed top-0 left-0 w-full h-10 z-10"
+                className="fixed top-0 left-0 w-full h-30 z-10"
                 onMouseEnter={() => setVisible(true)}
             />
 
