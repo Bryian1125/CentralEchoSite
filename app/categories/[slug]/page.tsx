@@ -1,7 +1,7 @@
-import CategoryHeader from "../../../components/CategoryPage/CategoryHeader.tsx"
-import SectionHeader from "../../../components/CategoryPage/SectionHeader.tsx"
-import SpotlightArticle from "../../../components/CategoryPage/SpotlightArticle.tsx"
-import Article from "../../../components/CategoryPage/Article.tsx"
+import CategoryHeader from "../../../components/CategoryPage/CategoryHeader"
+import SectionHeader from "../../../components/CategoryPage/SectionHeader"
+import SpotlightArticle from "../../../components/CategoryPage/SpotlightArticle"
+import Article from "../../../components/CategoryPage/Article"
 
 
 export default async function CategoryPage({

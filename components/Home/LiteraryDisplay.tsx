@@ -1,5 +1,5 @@
-import DisplayHeader from "./DisplayHeader.tsx"
-import LiteraryDisplayCard from "./LiteraryDisplayCard.tsx"
+import DisplayHeader from "./DisplayHeader"
+import LiteraryDisplayCard from "./LiteraryDisplayCard"
 
 type Data = {
     link: string

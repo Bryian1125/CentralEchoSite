@@ -1,4 +1,4 @@
-import CarouselCard from "./CarouselCard.tsx"
+import CarouselCard from "./CarouselCard"
 
 export default function HeroBanner() {
     return(

@@ -1,6 +1,6 @@
-import HeroBanner from "../components/Home/HeroBanner.tsx"
-import CategoryDisplay from "../components/Home/CategoryDisplay.tsx"
-import LiteraryDisplay from "../components/Home/LiteraryDisplay.tsx"
+import HeroBanner from "../components/Home/HeroBanner"
+import CategoryDisplay from "../components/Home/CategoryDisplay"
+import LiteraryDisplay from "../components/Home/LiteraryDisplay"
 
 export default function App() {
   return (

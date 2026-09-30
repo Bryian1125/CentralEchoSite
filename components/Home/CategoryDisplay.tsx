@@ -1,6 +1,6 @@
-import DisplayHeader from "./DisplayHeader.tsx"
-import SmallDisplayCard from "./SmallDisplayCard.tsx"
-import LargeDisplayCard from "./LargeDisplayCard.tsx"
+import DisplayHeader from "./DisplayHeader"
+import SmallDisplayCard from "./SmallDisplayCard"
+import LargeDisplayCard from "./LargeDisplayCard"
 
 type CategoryDisplayProps = {
     title: string;
