@@ -68,6 +68,20 @@ export function mapPostToArticle(post: WPPost): Article {
     };
 }
 
+/** Extended article with full content for detail page. */
+export type ArticleWithContent = Article & {
+  content: string;
+};
+
+/** Map a raw WordPress post into the app's `ArticleWithContent` model. */
+export function mapPostToArticleWithContent(post: WPPost): ArticleWithContent {
+  const article = mapPostToArticle(post);
+  return {
+    ...article,
+    content: post.content?.rendered ?? "",
+  };
+}
+
 export type FetchPostsOptions = {
     /** Maximum number of posts to return. */
     perPage?: number;
@@ -122,4 +136,50 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 /** Fetch the latest articles within a category slug. */
 export async function getArticlesByCategory(categorySlug: string, perPage = 6): Promise<Article[]> {
     return getArticles({ categorySlug, perPage });
+}
+
+/** Fetch a single article by slug with full content for detail page. */
+export async function getArticleBySlugWithContent(slug: string): Promise<ArticleWithContent | null> {
+  if (!API_URL) {
+    throw new Error("WORDPRESS_API_URL is not set.");
+  }
+
+  const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed=true`, {
+    next: { revalidate: 60 },
+  });
+
+  if (!response.ok) {
+    throw new Error(`WordPress request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const posts = (await response.json()) as WPPost[];
+  const post = posts[0];
+  
+  return post ? mapPostToArticleWithContent(post) : null;
+}
+
+/** WordPress Category type for navigation. */
+export type WPCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  count: number;
+  link: string;
+};
+
+/** Fetch all categories from WordPress for navigation. */
+export async function getCategories(): Promise<WPCategory[]> {
+  if (!API_URL) {
+    throw new Error("WORDPRESS_API_URL is not set.");
+  }
+
+  const response = await fetch(`${API_URL}/wp-json/wp/v2/categories?per_page=100`, {
+    next: { revalidate: 3600 }, // Cache for 1 hour
+  });
+
+  if (!response.ok) {
+    throw new Error(`WordPress categories request failed: ${response.status} ${response.statusText}`);
+  }
+
+  return (await response.json()) as WPCategory[];
 }
