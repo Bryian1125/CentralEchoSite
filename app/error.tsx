@@ -1,19 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 
-export default function Error({
+export default function HomeError({
   error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
       <div className="max-w-md space-y-6">
@@ -21,7 +16,7 @@ export default function Error({
           Something went wrong
         </h1>
         <p className="text-text/70 font-['NeueHaasGrotDisp'] text-lg">
-          We couldn't load this page. Please try again.
+          We couldn't load the homepage. Please try again.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button

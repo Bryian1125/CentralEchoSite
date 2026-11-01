@@ -37,7 +37,7 @@
 
 @theme {
     --font-hefring-regular: 'Hefring Slab Regular', serif;
-    --font-hefring-mediun: 'Hefring Slab Medium', serif;
+    --font-hefring-medium: 'Hefring Slab Medium', serif;
     --font-hefring-bold: 'Hefring Slab Bold', serif;
     --font-neuehaas: "Neue Haas Grotesk", sans-serif;
     --color-background: var(--background);
