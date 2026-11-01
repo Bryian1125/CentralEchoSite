@@ -1,21 +1,39 @@
-type LargeDisplayCardProps = {
-    name?: string;
-    author?: string;
-    date?: string;
-}
+"use client";
 
-export default function LargeDisplayCard({ name = "Featured Article", author = "Author Name", date = "January 1, 2026" }: LargeDisplayCardProps) {
-    return (
-        <button className="flex flex-col items-start justify-center w-[550] h-[550] rounded-4xl bg-background border-1 border-border shadow-xl relative overflow-clip text-left">
-            <img className="absolute inset-0 w-full h-full object-cover bg-secondary" />
+import type { Article } from "@/lib/content";
+import Image from "next/image";
+import { formatDate } from "@/lib/content";
+import Link from "next/link";
 
-            <div className="z-2 absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+export default function LargeDisplayCard({ article }: { article: Article }) {
+  return (
+    <Link href={article.href} className="block">
+      <div className="flex flex-col items-start justify-center w-[550px] h-[550px] rounded-4xl bg-background border-1 border-border shadow-xl relative overflow-clip text-left group">
+        <div className="absolute inset-0">
+          {article.image ? (
+            <Image
+              src={article.image}
+              alt={article.imageAlt}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="550px"
+              priority
+            />
+          ) : (
+            <div className="w-full h-full bg-secondary" />
+          )}
+        </div>
 
-            <div className="z-3 flex flex-col absolute bottom-0 left-0 right-0 p-6">
-                <p className="text-text font-bold text-2xl font-['NeueHaasGrotDisp']">{name}</p>
-                <p className="text-text font-['Hefring_Slab_Bold']">by {author}</p>
-                <p className="text-text font-['NeueHaasGrotDisp'] text-sm">{date}</p>
-            </div>
-        </button>
-    )
+        <div className="z-2 absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+
+        <div className="z-3 flex flex-col absolute bottom-0 left-0 right-0 p-6">
+          <p className="text-text font-bold text-2xl font-['NeueHaasGrotDisp'] group-hover:text-primary transition-colors line-clamp-2">
+            {article.title}
+          </p>
+          <p className="text-text font-['Hefring_Slab_Bold']">by {article.author}</p>
+          <p className="text-text font-['NeueHaasGrotDisp'] text-sm">{formatDate(article.date)}</p>
+        </div>
+      </div>
+    </Link>
+  );
 }
