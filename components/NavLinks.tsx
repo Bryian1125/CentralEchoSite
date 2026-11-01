@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
 
 type Category = {
   id: number;
@@ -12,7 +13,11 @@ type Category = {
   link: string;
 };
 
-export default function NavLinks() {
+interface NavLinksProps {
+  onLinkClick?: () => void;
+}
+
+export default function NavLinks({ onLinkClick }: NavLinksProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
@@ -43,31 +48,63 @@ export default function NavLinks() {
     })),
   ];
 
+  const handleLinkClick = () => {
+    onLinkClick?.();
+  };
+
   if (loading) {
     return (
-      <div className="flex flex-col gap-3">
-        <Link href="/" className="text-lg font-['Hefring_Slab_Bold'] animate-pulse">Home</Link>
-        <div className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-        <div className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-        <div className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-        <div className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-      </div>
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+        }}
+        className="flex flex-col gap-3"
+      >
+        <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="text-lg font-['Hefring_Slab_Bold'] animate-pulse">Home</motion.div>
+        <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
+        <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
+        <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
+        <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
+      </motion.div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+      }}
+      className="flex flex-col gap-3"
+    >
       {navItems.map((item) => (
-        <Link
+        <motion.div
           key={item.href}
-          href={item.href}
-          className={`text-lg transition-colors hover:text-primary ${
-            item.bold ? "font-['Hefring_Slab_Bold']" : "font-['Hefring_Slab_Regular']"
-          } ${pathname === item.href ? "text-primary" : ""}`}
+          variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
         >
-          {item.label}
-        </Link>
+          <Link
+            href={item.href}
+            onClick={handleLinkClick}
+            className={`text-lg transition-colors hover:text-primary relative ${
+              item.bold ? "font-['Hefring_Slab_Bold']" : "font-['Hefring_Slab_Regular']"
+            } ${pathname === item.href ? "text-primary" : ""}`}
+          >
+            {item.label}
+            {pathname === item.href && (
+              <motion.div
+                layoutId="active-indicator"
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full"
+              />
+            )}
+          </Link>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }
