@@ -13,6 +13,7 @@ import {
   getArticleBySlug as wpGetArticleBySlug,
   getArticleBySlugWithContent as wpGetArticleBySlugWithContent,
   getCategories as wpGetCategories,
+  getRelatedArticles as wpGetRelatedArticles,
 } from "./wordpress/api";
 import { latestArticles, placeholderArticles } from "./mock/articles";
 
@@ -90,5 +91,59 @@ export async function getArticleBySlugWithContent(slug: string): Promise<Article
     console.warn(`WordPress fetch failed for article ${slug}:`, error);
     const article = latestArticles.find((a) => a.slug === slug);
     return article ? { ...article, content: "<p>Mock article content.</p>" } : null;
+  }
+}
+
+/** Fetch articles for a category with pagination. */
+export async function getArticlesByCategoryPaginated(
+  slug: string,
+  page = 1,
+  limit = 6
+): Promise<{ articles: Article[]; hasMore: boolean }> {
+  if (USE_MOCK) {
+    const all = placeholderArticles(limit * 3, slug); // Mock more articles
+    const start = (page - 1) * limit;
+    const articles = all.slice(start, start + limit);
+    return { articles, hasMore: start + limit < all.length };
+  }
+  try {
+    const articles = await getArticles({ categorySlug: slug, perPage: limit, page });
+    return { articles, hasMore: articles.length === limit };
+  } catch (error) {
+    console.warn(`WordPress fetch failed for category ${slug}, falling back to mock data:`, error);
+    const all = placeholderArticles(limit * 3, slug);
+    const start = (page - 1) * limit;
+    const articles = all.slice(start, start + limit);
+    return { articles, hasMore: start + limit < all.length };
+  }
+}
+
+/** Fetch related articles for an article (same category, excluding current). */
+export async function getRelatedArticles(
+  categorySlug: string,
+  excludeId: number,
+  limit = 3
+): Promise<Article[]> {
+  if (USE_MOCK) {
+    return placeholderArticles(limit, categorySlug).filter((a) => a.id !== excludeId);
+  }
+  try {
+    return await wpGetRelatedArticles(categorySlug, excludeId, limit);
+  } catch (error) {
+    console.warn(`WordPress fetch failed for related articles:`, error);
+    return placeholderArticles(limit, categorySlug).filter((a) => a.id !== excludeId);
+  }
+}
+
+/** Fetch all articles (for sitemap, RSS feed). */
+export async function getAllArticles(limit = 100): Promise<Article[]> {
+  if (USE_MOCK) {
+    return latestArticles.slice(0, limit);
+  }
+  try {
+    return await getArticles({ perPage: limit });
+  } catch (error) {
+    console.warn("WordPress fetch failed, falling back to mock data:", error);
+    return latestArticles.slice(0, limit);
   }
 }

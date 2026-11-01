@@ -89,6 +89,10 @@ export type FetchPostsOptions = {
     categorySlug?: string;
     /** Fetch a single post by slug. */
     slug?: string;
+    /** Page number for pagination (1-indexed). */
+    page?: number;
+    /** Post IDs to exclude from results. */
+    exclude?: number[];
 };
 
 /** Fetch raw posts from the WordPress REST API. Requires `WORDPRESS_API_URL`. */
@@ -108,6 +112,12 @@ export async function fetchPosts(options: FetchPostsOptions = {}): Promise<WPPos
     }
     if (options.slug) {
         query.set("slug", options.slug);
+    }
+    if (options.page) {
+        query.set("page", String(options.page));
+    }
+    if (options.exclude && options.exclude.length > 0) {
+        query.set("exclude", options.exclude.join(","));
     }
 
     const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?${query}`, {
@@ -182,4 +192,13 @@ export async function getCategories(): Promise<WPCategory[]> {
   }
 
   return (await response.json()) as WPCategory[];
+}
+
+/** Fetch related articles (same category, excluding current article). */
+export async function getRelatedArticles(
+  categorySlug: string,
+  excludeId: number,
+  limit = 3
+): Promise<Article[]> {
+  return getArticles({ categorySlug, perPage: limit, exclude: [excludeId] });
 }
