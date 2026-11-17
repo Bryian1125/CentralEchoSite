@@ -1,6 +1,39 @@
 import { NextResponse } from "next/server";
+import { latestArticles, placeholderArticles } from "@/lib/mock/articles";
+import type { WPPost } from "@/lib/wordpress/types";
+import { mapPostToArticle } from "@/lib/wordpress/api";
 
 const API_URL = (process.env.WORDPRESS_API_URL ?? "").replace(/\/+$/, "");
+
+const MOCK_CATEGORY_SLUGS = ["opinion", "feature", "literary", "sports"];
+
+/** Offline search used when no WordPress URL is configured (development). */
+function searchMockArticles(query: string) {
+  const q = query.toLowerCase();
+  const articles = [
+    ...latestArticles,
+    ...MOCK_CATEGORY_SLUGS.flatMap((slug) => placeholderArticles(5, slug)),
+  ];
+
+  return articles
+    .filter(
+      (article) =>
+        article.title.toLowerCase().includes(q) ||
+        article.slug.includes(q) ||
+        article.category.toLowerCase().includes(q)
+    )
+    .slice(0, 10)
+    .map((article, index) => ({
+      // Re-index so combined mock results stay unique for React keys.
+      id: index + 1,
+      title: article.title,
+      excerpt: article.excerpt,
+      slug: article.slug,
+      href: article.href,
+      category: article.category,
+      image: article.image,
+    }));
+}
 
 // Simple in-memory rate limiter (use Redis in production)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -42,7 +75,7 @@ export async function GET(request: Request) {
   }
 
   if (!API_URL) {
-    return NextResponse.json([]);
+    return NextResponse.json(searchMockArticles(query));
   }
 
   try {
@@ -58,17 +91,20 @@ export async function GET(request: Request) {
       return NextResponse.json([]);
     }
 
-    const posts = await response.json();
+    const posts = (await response.json()) as WPPost[];
 
-    const results = posts.map((post: any) => ({
-      id: post.id,
-      title: post.title?.rendered?.replace(/<[^>]*>/g, "") ?? "Untitled",
-      excerpt: post.excerpt?.rendered?.replace(/<[^>]*>/g, "").substring(0, 160) ?? "",
-      slug: post.slug,
-      href: `/articles/${post.slug}`,
-      category: post._embedded?.["wp:term"]?.[0]?.find((t: any) => t.taxonomy === "category")?.name ?? "",
-      image: post._embedded?.["wp:featuredmedia"]?.[0]?.media_details?.sizes?.thumbnail?.source_url ?? null,
-    }));
+    const results = posts.map((post) => {
+      const article = mapPostToArticle(post);
+      return {
+        id: article.id,
+        title: article.title,
+        excerpt: article.excerpt,
+        slug: article.slug,
+        href: article.href,
+        category: article.category,
+        image: article.image,
+      };
+    });
 
     return NextResponse.json(results);
   } catch {
