@@ -5,8 +5,7 @@ import CategoryHeader from "@/components/CategoryPage/CategoryHeader";
 import SectionHeader from "@/components/CategoryPage/SectionHeader";
 import SpotlightArticle from "@/components/CategoryPage/SpotlightArticle";
 import Article from "@/components/CategoryPage/Article";
-import { getArticlesByCategoryPaginated } from "@/lib/posts";
-import Navbar from "@/components/Navbar";
+import { getArticlesByCategoryPaginated, getCategories } from "@/lib/posts";
 import Pagination from "@/components/Pagination";
 import Link from "next/link";
 
@@ -28,9 +27,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CategoryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const { page = "1" } = await searchParams;
+
+  // Validate the slug against the categories from the CMS so that mistyped
+  // URLs (e.g. /categories/typo) return a 404 instead of an empty archive.
+  const categories = await getCategories();
+  if (!categories.some((category) => category.slug === slug)) {
+    notFound();
+  }
+
   const categoryName = slug.toUpperCase();
   const currentPage = Math.max(1, parseInt(page, 10));
-  
+
   const { articles, hasMore } = await getArticlesByCategoryPaginated(slug, currentPage, 6);
   
   // Show 404 for page > 1 with no articles, but friendly empty state for page 1
@@ -42,8 +49,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
       <main className="flex-1 flex flex-col items-center pt-20 pb-20 px-4">
         <div className="w-full max-w-6xl">
           <CategoryHeader title={categoryName} />

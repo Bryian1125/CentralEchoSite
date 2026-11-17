@@ -41,7 +41,7 @@ export default function SmallDisplayCard({ article }: { article: Article }) {
           >
             {article.title}
           </motion.p>
-          <p className="text-text font-['Hefring_Slab_Bold'] text-md">by {article.author}</p>
+          <p className="text-text font-['Hefring_Slab_Bold'] text-base">by {article.author}</p>
           <p className="text-text font-['NeueHaasGrotDisp'] text-sm">{formatDate(article.date)}</p>
         </div>
       </motion.div>

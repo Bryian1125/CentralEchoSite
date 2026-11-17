@@ -61,7 +61,7 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
             transition: { staggerChildren: 0.15 },
           },
         }}
-        className="flex flex-row items-center justify-center w-full h-auto md:h-xl mt-10 mb-10 gap-4 md:gap-12 overflow-x-auto md:overflow-x-clip"
+        className="flex flex-row items-center justify-center w-full h-auto md:h-[520px] mt-10 mb-10 gap-4 md:gap-12 overflow-x-auto md:overflow-x-clip"
       >
         {articles.map((article) => (
           <motion.div key={article.id} variants={{ hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0 } }}>

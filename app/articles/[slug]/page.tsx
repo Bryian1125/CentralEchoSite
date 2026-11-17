@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getArticleBySlugWithContent, getRelatedArticles } from "@/lib/posts";
-import Navbar from "@/components/Navbar";
 import ArticleContent from "@/components/ArticleContent";
 
 interface PageProps {
@@ -44,8 +43,6 @@ export default async function ArticlePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
       <main className="flex-1 flex flex-col items-center pt-20 pb-20 px-4">
         <ArticleContent article={article} relatedArticles={relatedArticles} />
       </main>
