@@ -32,9 +32,11 @@ export default function Navbar() {
     if (latest < 10) {
       setVisible(true);
     } else if (latest > lastScrollY.current) {
+      // Scrolling down — hide the bar.
       setVisible(false);
     } else {
-      setVisible(false);
+      // Scrolling up — bring the bar back.
+      setVisible(true);
     }
     lastScrollY.current = latest;
   });
@@ -48,18 +50,24 @@ export default function Navbar() {
     setMobileMenuOpen(false);
   };
 
+  // The invisible hover strip only re-hides the bar once the user has
+  // scrolled away from the top of the page.
+  const handleTriggerLeave = () => {
+    setVisible(scrollY.get() < 10);
+  };
+
   return (
     <>
       <div
         className="fixed top-0 left-0 w-full h-30 z-10"
         onMouseEnter={() => setVisible(true)}
-        onMouseLeave={() => setVisible(false)}
+        onMouseLeave={handleTriggerLeave}
       />
 
       <motion.div
         animate={{ y: visible ? 0 : "-150%" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="fixed z-5 top-3 pl-3 pr-5 inset-x-75 md:inset-x-75 flex items-center justify-between h-13 bg-background rounded-full border-1 border-border shadow-lg"
+        className="fixed z-5 top-3 inset-x-4 md:inset-x-75 pl-3 pr-5 flex items-center justify-between h-13 gap-2 bg-background rounded-full border-1 border-border shadow-lg"
       >
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -75,7 +83,7 @@ export default function Navbar() {
           onClick={handleSearchClick}
           whileHover={{ scale: 1.02, backgroundColor: "var(--color-secondary)" }}
           whileTap={{ scale: 0.98 }}
-          className="hidden md:flex pl-3 pr-3 items-center justify-center rounded-full w-2/3 h-8 bg-background"
+          className="flex pl-3 pr-3 items-center justify-center rounded-full w-1/2 md:w-2/3 h-8 bg-background"
           aria-label="Search"
         >
           <motion.div
@@ -89,9 +97,10 @@ export default function Navbar() {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="md:hidden"
+          className="flex items-center justify-center"
           aria-label="Menu"
           aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu-panel"
         >
           <div className="bg-primary w-4 h-4 [mask-image:url('/assets/hamburger.png')] [mask-size:contain] [mask-repeat:no-repeat]" />
         </motion.button>
@@ -104,17 +113,18 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-background/50 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-40 bg-background/50 backdrop-blur-sm"
             onClick={closeMobileMenu}
             aria-hidden="true"
           />
-          {/* Mobile Menu Panel */}
+          {/* Menu Panel */}
           <motion.div
+            id="mobile-menu-panel"
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-full w-full max-w-sm z-50 bg-background border-l border-border shadow-xl p-6 md:hidden flex flex-col"
+            className="fixed top-0 right-0 h-full w-full max-w-sm z-50 bg-background border-l border-border shadow-xl p-6 flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"

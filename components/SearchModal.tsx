@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type SearchResult = {
@@ -24,45 +23,62 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const debouncedSearch = useCallback(
-    debounce(async (q: string) => {
-      if (q.length < 2) {
-        setResults([]);
-        return;
-      }
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-        if (res.ok) {
-          const data = await res.json();
-          setResults(data);
-          setSelectedIndex(-1);
-        }
-      } catch {
-        setResults([]);
-      } finally {
-        setLoading(false);
-      }
-    }, 300),
-    []
-  );
+  /** Reset the search state and close the modal. */
+  const closeSearch = () => {
+    setQuery("");
+    setResults([]);
+    setSelectedIndex(-1);
+    setLoading(false);
+    onClose();
+  };
 
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    if (value.trim().length < 2) {
+      setResults([]);
+      setSelectedIndex(-1);
+      setLoading(false);
+    }
+  };
+
+  // Debounced live search. The timer lives in the effect so it is cancelled
+  // between keystrokes; every state update happens inside an async callback.
   useEffect(() => {
-    debouncedSearch(query);
-  }, [query, debouncedSearch]);
+    if (query.trim().length < 2) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setLoading(true);
+      fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        .then(async (res) => {
+          if (res.ok) {
+            const data = await res.json();
+            setResults(data);
+            setSelectedIndex(-1);
+          }
+        })
+        .catch(() => {
+          setResults([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
 
   useEffect(() => {
     if (isOpen) {
       inputRef.current?.focus();
-      setQuery("");
-      setResults([]);
-      setSelectedIndex(-1);
     }
   }, [isOpen]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
-      onClose();
+      closeSearch();
       return;
     }
     if (e.key === "ArrowDown") {
@@ -74,13 +90,13 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     } else if (e.key === "Enter" && selectedIndex >= 0) {
       e.preventDefault();
       const result = results[selectedIndex];
-      onClose();
+      closeSearch();
       router.push(result.href);
     }
   };
 
   const handleResultClick = (href: string) => {
-    onClose();
+    closeSearch();
     router.push(href);
   };
 
@@ -93,7 +109,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4"
-        onClick={onClose}
+        onClick={closeSearch}
         role="dialog"
         aria-modal="true"
         aria-label="Search"
@@ -128,7 +144,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 ref={inputRef}
                 type="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={handleQueryChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Search articles..."
                 className="w-full pl-12 pr-4 py-3 bg-secondary/50 border border-border rounded-xl text-text placeholder-text/40 font-['NeueHaasGrotDisp'] text-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -233,7 +249,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
               ))}
               {results.length === 0 && query.length >= 2 && !loading && (
                 <li className="py-8 text-center text-text/50 font-['NeueHaasGrotDisp']">
-                  No articles found for "{query}"
+                  No articles found for &quot;{query}&quot;
                 </li>
               )}
             </motion.ul>
@@ -254,12 +270,4 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
       </motion.div>
     </AnimatePresence>
   );
-}
-
-function debounce<T extends (...args: any[]) => any>(fn: T, ms: number): T {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  return ((...args: any[]) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), ms);
-  }) as T;
 }

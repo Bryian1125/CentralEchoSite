@@ -25,11 +25,14 @@ export default function DisplayHeader({ title, link }: HeaderData) {
         className="flex flex-row items-center justify-between w-full max-w-[1200px] mx-auto"
       >
         <h1 className="text-text text-4xl font-['Hefring_Slab_Bold']">{title}</h1>
-        <Link href={`/categories/${link}`}>
-          <motion.button
+        <Link
+          href={`/categories/${link}`}
+          className="flex flex-row items-center justify-center gap-2 text-text font-['Hefring_Slab_Medium'] text-2xl hover:text-primary transition-colors"
+        >
+          <motion.span
             whileHover={{ x: 4 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-row items-center justify-center gap-2 text-text font-['Hefring_Slab_Medium'] text-2xl hover:text-primary transition-colors"
+            className="flex flex-row items-center justify-center gap-2"
           >
             <span>SEE ALL</span>
             <motion.img
@@ -39,7 +42,7 @@ export default function DisplayHeader({ title, link }: HeaderData) {
               width={16}
               height={16}
             />
-          </motion.button>
+          </motion.span>
         </Link>
       </motion.div>
       <motion.div

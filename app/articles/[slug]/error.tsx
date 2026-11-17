@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 
-export default function ArticleError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function ArticleError({ reset }: { reset: () => void }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
       <div className="max-w-md space-y-6">
@@ -16,7 +10,7 @@ export default function ArticleError({
           Article Not Found
         </h1>
         <p className="text-text/70 font-['NeueHaasGrotDisp'] text-lg">
-          This article doesn't exist or has been removed.
+          This article doesn&apos;t exist or has been removed.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
