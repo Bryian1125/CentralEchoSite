@@ -128,13 +128,13 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="w-full max-w-2xl bg-background rounded-2xl border border-border shadow-2xl overflow-hidden"
+          className="w-full max-w-2xl max-h-[calc(100vh-7rem)] flex flex-col bg-background rounded-2xl border border-border shadow-2xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Search Input */}
-          <div className="relative p-4 border-b border-border">
+          <div className="relative p-4 border-b border-border shrink-0">
             <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text/50">
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-text/50">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.3-4.3" />
@@ -147,7 +147,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 onChange={handleQueryChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Search articles..."
-                className="w-full pl-12 pr-4 py-3 bg-secondary/50 border border-border rounded-xl text-text placeholder-text/40 font-['NeueHaasGrotDisp'] text-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full pl-4 pr-12 py-3 bg-secondary/50 border border-border border-b-2 border-b-primary rounded-xl text-text placeholder-text/40 font-['NeueHaasGrotDisp'] text-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 autoComplete="off"
                 aria-label="Search articles"
                 aria-controls="search-results"
@@ -157,7 +157,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-primary"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-primary"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
@@ -166,7 +166,6 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
               )}
             </div>
             <p className="mt-2 text-sm text-text/50 font-['NeueHaasGrotDisp']">
-              {query.length < 2 && "Type at least 2 characters to search"}
               {query.length >= 2 && !loading && results.length === 0 && "No results found"}
               {query.length >= 2 && !loading && results.length > 0 && `${results.length} result${results.length !== 1 ? "s" : ""} found`}
             </p>
@@ -176,7 +175,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
           <AnimatePresence mode="popLayout">
             <motion.ul
               id="search-results"
-              className="max-h-[60vh] overflow-y-auto p-2"
+              className="flex-1 min-h-0 overflow-y-auto p-2"
               initial={false}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -256,7 +255,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
           </AnimatePresence>
 
           {/* Keyboard hint */}
-          <div className="px-4 py-3 border-t border-border text-xs text-text/40 font-['NeueHaasGrotDisp'] flex items-center justify-between">
+          <div className="px-4 py-3 border-t border-border text-xs text-text/40 font-['NeueHaasGrotDisp'] flex items-center justify-between shrink-0">
             <kbd className="px-2 py-0.5 bg-secondary rounded border border-border">Esc</kbd> to close
             <span className="flex items-center gap-1">
               <kbd className="px-2 py-0.5 bg-secondary rounded border border-border">↑</kbd>
