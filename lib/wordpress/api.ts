@@ -63,6 +63,7 @@ export function mapPostToArticle(post: WPPost): Article {
         date: post.date,
         category: category?.name ?? "",
         href: `/articles/${post.slug}`,
+        featured: post.sticky ?? false,
         image: getFeaturedImage(post),
         imageAlt: media?.alt_text || title,
     };

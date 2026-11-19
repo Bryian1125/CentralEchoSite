@@ -73,6 +73,8 @@ export type WPPost = {
     featured_media: number;
     categories: number[];
     tags: number[];
+    /** WordPress sticky post flag — used to mark an article as featured. */
+    sticky?: boolean;
     _embedded?: WPPostEmbedded;
 };
 

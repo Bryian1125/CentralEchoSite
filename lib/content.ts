@@ -18,6 +18,8 @@ export type Article = {
     category: string;
     /** Intended in-app link to the article detail route. */
     href: string;
+    /** Whether the article is featured in the hero carousel (set via the CMS). */
+    featured: boolean;
     image: string | null;
     imageAlt: string;
 };
