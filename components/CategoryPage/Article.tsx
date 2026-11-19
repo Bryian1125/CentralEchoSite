@@ -16,8 +16,10 @@ export default function ArticleCard({ article }: ArticleProps) {
   return (
     <Link href={article.href} className="block">
       <motion.div
-        whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", transition: { type: "spring", stiffness: 300, damping: 30 } }}
         className="h-80 w-full bg-secondary rounded-2xl relative overflow-clip text-left"
       >
         {/* Featured Image */}
