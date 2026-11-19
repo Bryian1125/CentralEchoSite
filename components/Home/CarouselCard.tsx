@@ -12,9 +12,9 @@ export default function CarouselCard({ article }: { article: Article }) {
   return (
     <Link href={article.href} className="block">
       <motion.div
-        whileHover={{ y: -8, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
+        whileHover={{ y: -8, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)", zIndex: 50 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="w-[720px] h-[480px] bg-background rounded-4xl relative overflow-clip border-1 border-border shadow-xl"
+        className="w-[720px] h-[480px] bg-background rounded-4xl relative border-1 border-border shadow-xl"
       >
         <div className="absolute inset-0">
           {article.image ? (
