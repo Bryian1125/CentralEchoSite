@@ -18,8 +18,8 @@ export default function DisplayHeader({ title, link }: HeaderData) {
       className="flex flex-col w-full h-auto items-center justify-end mt-24 mb-12"
     >
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.1, duration: 0.5 }}
         className="flex flex-row items-center justify-between w-full max-w-[1200px] mx-auto"
@@ -46,8 +46,8 @@ export default function DisplayHeader({ title, link }: HeaderData) {
         </Link>
       </motion.div>
       <motion.div
-        initial={{ width: 0 }}
-        whileInView={{ width: "100%" }}
+        initial={{ opacity: 0, y: 10, scaleY: 0 }}
+        whileInView={{ opacity: 1, y: 0, scaleY: 1 }}
         viewport={{ once: true }}
         transition={{ delay: 0.3, duration: 0.5 }}
         className="bg-text w-full max-w-[1200px] mx-auto h-[2px] mt-4"
