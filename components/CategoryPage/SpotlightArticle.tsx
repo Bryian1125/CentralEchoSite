@@ -16,9 +16,9 @@ export default function SpotlightArticle({ article }: SpotlightArticleProps) {
   return (
     <Link href={article.href} className="block mx-auto">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: [0.87, 0, 0.13, 1] }}
         whileHover={{ y: -8, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)", transition: { type: "spring", stiffness: 300, damping: 30 } }}
         className="w-full max-w-4xl h-90 bg-secondary rounded-2xl relative overflow-clip text-left"
       >
