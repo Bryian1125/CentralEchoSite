@@ -130,9 +130,9 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
         }}
         className="flex flex-col items-center w-full px-4 pb-16"
       >
-        <div ref={viewportRef} className="w-full overflow-x-hidden pb-20">
+        <div ref={viewportRef} className="w-full overflow-x-hidden pb-24">
           <motion.div
-            className="flex flex-row gap-6 px-4 -mb-16"
+            className="flex flex-row gap-6 px-4"
             style={{ x: scrollX }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
