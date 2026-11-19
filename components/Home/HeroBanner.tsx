@@ -18,6 +18,11 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
   const featuredArticles = articles.filter((article) => article.featured);
   const displayArticles = featuredArticles.length > 0 ? featuredArticles : articles;
 
+  // Ensure page scrolls to top on mount to prevent default scroll offset
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const viewportRef = useRef<HTMLDivElement>(null);
 
   // scrollX is the translateX value of the carousel track (pixels).
