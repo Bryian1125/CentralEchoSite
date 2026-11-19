@@ -90,7 +90,7 @@ export default function Navbar() {
           className="absolute left-[calc(50%-4px)] -translate-x-1/2 flex pl-3 pr-3 items-center justify-end rounded-full w-[33%] md:w-[44%] h-8"
           style={{
             background: "linear-gradient(to bottom, var(--color-background) 33%, color-mix(in srgb, var(--color-primary) 12%, white) 100%)",
-            border: "1px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
+            border: "1.5px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
           }}
           aria-label="Search"
         >

@@ -184,7 +184,7 @@ export default function SearchModal({ isOpen, onClose, triggerRect }: { isOpen: 
                   className="w-full pl-4 pr-12 py-3 rounded-xl text-text placeholder-primary/60 font-['NeueHaasGrotDisp'] text-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   style={{
                     background: "linear-gradient(to bottom, var(--color-background) 33%, color-mix(in srgb, var(--color-primary) 12%, white) 100%)",
-                    border: "1px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
+                    border: "1.5px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
                     boxShadow: "inset 0 1px 0 rgba(37, 148, 216, 0.1)",
                   }}
                   autoComplete="off"
