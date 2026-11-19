@@ -70,9 +70,9 @@ export default function Navbar() {
       <motion.div
         animate={{ y: visible ? 0 : "-150%" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="fixed z-5 top-3 inset-x-4 md:inset-x-75 pl-3 pr-5 flex items-center justify-between h-13 gap-2 bg-background rounded-full border-3 shadow-lg"
+        className="fixed z-5 top-3 inset-x-4 md:inset-x-75 pl-3 pr-5 flex items-center justify-between h-13 gap-2 bg-background rounded-full shadow-lg"
           style={{
-            borderColor: "color-mix(in srgb, var(--color-primary) 15%, transparent)",
+            border: "3px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
           }}
       >
         <motion.button
