@@ -99,8 +99,8 @@ export default function SearchModal({ isOpen, onClose, triggerRect }: { isOpen: 
   const exitX = originRef.current.x - window.innerWidth / 2;
   const exitY = originRef.current.y - (window.innerHeight / 2 - 100);
 
-  // Shadow via drop-shadow filter (not clipped by overflow-hidden)
-  const shadowFilter = "drop-shadow(0 25px 50px rgba(0,0,0,0.4)) drop-shadow(0 0 1px rgba(0,0,0,0.05))";
+  // Shadow via drop-shadow filter (not clipped by overflow-hidden) — less opaque, slightly blue
+  const shadowFilter = "drop-shadow(0 25px 50px rgba(37, 148, 216, 0.15)) drop-shadow(0 0 1px rgba(37, 148, 216, 0.08))";
 
   return (
     <AnimatePresence>
