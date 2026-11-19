@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import NavLinks from "./NavLinks";
 import SearchModal from "./SearchModal";
 
@@ -13,6 +13,7 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
   const { scrollY } = useScroll();
   const pathname = usePathname();
+  const router = useRouter();
 
   // Body scroll lock when mobile menu is open
   useEffect(() => {
@@ -74,7 +75,8 @@ export default function Navbar() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="left-0 flex flex-row gap-2 items-center justify-center"
+          onClick={() => router.push("/")}
+          className="left-0 flex flex-row gap-2 items-center justify-center cursor-pointer"
           aria-label="The Central Echo - Home"
         >
           <div className="bg-primary w-8 h-8 [mask-image:url('/assets/celogo.png')] [mask-size:contain] [mask-repeat:no-repeat]" />
@@ -85,13 +87,23 @@ export default function Navbar() {
           onClick={handleSearchClick}
           whileHover={{ scale: 1.02, backgroundColor: "var(--color-secondary)" }}
           whileTap={{ scale: 0.98 }}
-          className="flex pl-3 pr-3 items-center justify-center rounded-full w-1/2 md:w-2/3 h-8 bg-background"
+          className="absolute left-[calc(50%-4px)] -translate-x-1/2 flex pl-3 pr-3 items-center justify-end rounded-full w-[33%] md:w-[44%] h-8"
+          style={{
+            background: "linear-gradient(to bottom, var(--color-background) 33%, color-mix(in srgb, var(--color-primary) 12%, white) 100%)",
+          }}
           aria-label="Search"
         >
           <motion.div
             whileHover={{ rotate: 90 }}
             transition={{ duration: 0.3 }}
             className="bg-primary w-5 h-5 [mask-image:url('/assets/search.png')] [mask-size:contain] [mask-repeat:no-repeat]"
+          />
+          {/* Animated underline on focus */}
+          <motion.div
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary rounded-full"
+            initial={{ width: 0 }}
+            whileFocus={{ width: "100%" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           />
         </motion.button>
 
