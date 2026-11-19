@@ -9,10 +9,8 @@ import { useEffect, useRef, useState } from "react";
 const CARD_WIDTH = 720;
 /** Gap between carousel cards (matches the gap-6 utility = 24px). */
 const CARD_GAP = 24;
-/** Auto-advance to the next featured article every 7 seconds (slowed from 5s). */
+/** Auto-advance to the next featured article every 7 seconds. */
 const AUTO_ADVANCE_MS = 7000;
-
-
 
 export default function HeroBanner({ articles }: { articles: Article[] }) {
   // Only featured articles (sticky posts in the CMS) appear in the carousel.
@@ -24,21 +22,27 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
 
   // scrollX is the translateX value of the carousel track (pixels).
   // Negative values shift the track left, making cards appear to move right (pan right).
-  // We only ever decrease it (more negative) each interval → "only ever pan right".
-  // When it passes the last card, we reset to the centered start position at the interval boundary.
-  const [scrollX, setScrollX] = useState(
-    typeof window !== "undefined" ? (window.innerWidth - CARD_WIDTH) / 2 : 0
-  );
+  // Initialize to 0 on both server and client to avoid hydration mismatch.
+  // The correct centered value is set in useEffect after hydration.
+  const [scrollX, setScrollX] = useState(0);
+  const [isHydrated, setIsHydrated] = useState(false);
+
   // Use a ref for the centered start position so it can be updated on resize
   // and read by the interval without stale closures.
-  const initialXRef = useRef(
-    typeof window !== "undefined" ? (window.innerWidth - CARD_WIDTH) / 2 : 0
-  );
+  const initialXRef = useRef(0);
+
+  // Set initial centered position after hydration to avoid SSR mismatch.
+  useEffect(() => {
+    setIsHydrated(true);
+    const initial = (window.innerWidth - CARD_WIDTH) / 2;
+    initialXRef.current = initial;
+    setScrollX(initial);
+  }, []);
 
   // Keep initialXRef in sync with viewport size on resize.
   useEffect(() => {
     const onResize = () => {
-      const newInitial = typeof window !== "undefined" ? (window.innerWidth - CARD_WIDTH) / 2 : 0;
+      const newInitial = (window.innerWidth - CARD_WIDTH) / 2;
       initialXRef.current = newInitial;
       // If scrollX has wrapped past the boundary, snap it back to the new start.
       if (Math.abs(scrollX - newInitial) > CARD_WIDTH + CARD_GAP) {
@@ -126,7 +130,7 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
         }}
         className="flex flex-col items-center w-full px-4 pb-16"
       >
-        <div ref={viewportRef} className="w-full overflow-x-hidden">
+        <div ref={viewportRef} className="w-full overflow-x-hidden pb-4">
           <motion.div
             className="flex flex-row gap-6 px-4"
             style={{ x: scrollX }}
