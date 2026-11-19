@@ -18,7 +18,7 @@ export default function ArticleCard({ article }: ArticleProps) {
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1] }}
+        transition={{ duration: 0.8, ease: [0.55, 0.055, 0.675, 0.19] }}
         whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", transition: { type: "spring", stiffness: 300, damping: 30 } }}
         className="h-80 w-full bg-secondary rounded-2xl relative overflow-clip text-left"
       >
