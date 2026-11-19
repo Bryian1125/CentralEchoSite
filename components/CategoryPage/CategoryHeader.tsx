@@ -17,7 +17,7 @@ export default function CategoryHeader({ title }: Data) {
       <motion.span
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.6, ease: [0.87, 0, 0.13, 1] }}
+        transition={{ delay: 0.1, duration: 0.6, ease: [0.645, 0.045, 0.355, 1] }}
         className="inline-flex px-3 py-1 text-xs font-['Hefring_Slab_Bold'] uppercase tracking-wider bg-primary text-background rounded-full mb-4 shrink-0 mx-auto"
         style={{ width: "fit-content" }}
       >
@@ -26,7 +26,7 @@ export default function CategoryHeader({ title }: Data) {
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6, ease: [0.87, 0, 0.13, 1] }}
+        transition={{ delay: 0.2, duration: 0.6, ease: [0.645, 0.045, 0.355, 1] }}
         className="text-4xl md:text-6xl lg:text-7xl font-['Hefring_Slab_Bold'] text-text leading-tight"
       >
         {title}
@@ -34,7 +34,7 @@ export default function CategoryHeader({ title }: Data) {
       <motion.div
         initial={{ width: 0 }}
         animate={{ width: "80px" }}
-        transition={{ delay: 0.4, duration: 0.6, ease: [0.87, 0, 0.13, 1] }}
+        transition={{ delay: 0.4, duration: 0.6, ease: [0.645, 0.045, 0.355, 1] }}
         className="mx-auto mt-4 h-1 bg-primary"
       />
     </motion.div>

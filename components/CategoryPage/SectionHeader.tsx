@@ -20,7 +20,7 @@ export default function SectionHeader({ title }: SectionHeaderProps) {
         initial={{ width: 0 }}
         whileInView={{ width: "100%" }}
         viewport={{ once: true }}
-        transition={{ delay: 0.2, duration: 0.7, ease: [0.87, 0, 0.13, 1] }}
+        transition={{ delay: 0.2, duration: 0.7, ease: [0.645, 0.045, 0.355, 1] }}
         className="w-full h-1 bg-text"
       />
     </motion.div>
