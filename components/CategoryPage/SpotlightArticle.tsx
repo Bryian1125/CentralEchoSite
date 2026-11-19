@@ -14,7 +14,7 @@ type SpotlightArticleProps = {
 
 export default function SpotlightArticle({ article }: SpotlightArticleProps) {
   return (
-    <Link href={article.href} className="block">
+    <Link href={article.href} className="block mx-auto">
       <motion.div
         whileHover={{ y: -8, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}

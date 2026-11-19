@@ -18,7 +18,8 @@ export default function CategoryHeader({ title }: Data) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.4 }}
-        className="inline-block px-3 py-1 text-xs font-['Hefring_Slab_Bold'] uppercase tracking-wider bg-primary text-background rounded-full mb-4"
+        className="inline-flex px-3 py-1 text-xs font-['Hefring_Slab_Bold'] uppercase tracking-wider bg-primary text-background rounded-full mb-4 shrink-0"
+        style={{ width: "fit-content" }}
       >
         CATEGORY ARCHIVES
       </motion.span>
