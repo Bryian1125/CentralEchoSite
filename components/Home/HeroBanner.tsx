@@ -3,54 +3,117 @@
 import type { Article } from "@/lib/content";
 import CarouselCard from "./CarouselCard";
 import { motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+
+/** Width of a single carousel card (matches CarouselCard's fixed width). */
+const CARD_WIDTH = 720;
+/** Gap between carousel cards (matches the gap-6 utility = 24px). */
+const CARD_GAP = 24;
+/** Auto-advance to the next featured article every 7 seconds (slowed from 5s). */
+const AUTO_ADVANCE_MS = 7000;
+
+
 
 export default function HeroBanner({ articles }: { articles: Article[] }) {
+  // Only featured articles (sticky posts in the CMS) appear in the carousel.
+  // Fall back to all articles if none are marked featured so it never empties.
+  const featuredArticles = articles.filter((article) => article.featured);
+  const displayArticles = featuredArticles.length > 0 ? featuredArticles : articles;
+
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  // scrollX is the translateX value of the carousel track (pixels).
+  // Negative values shift the track left, making cards appear to move right (pan right).
+  // We only ever decrease it (more negative) each interval → "only ever pan right".
+  // When it passes the last card, we reset to the centered start position at the interval boundary.
+  const [scrollX, setScrollX] = useState(
+    typeof window !== "undefined" ? (window.innerWidth - CARD_WIDTH) / 2 : 0
+  );
+  // Use a ref for the centered start position so it can be updated on resize
+  // and read by the interval without stale closures.
+  const initialXRef = useRef(
+    typeof window !== "undefined" ? (window.innerWidth - CARD_WIDTH) / 2 : 0
+  );
+
+  // Keep initialXRef in sync with viewport size on resize.
+  useEffect(() => {
+    const onResize = () => {
+      const newInitial = typeof window !== "undefined" ? (window.innerWidth - CARD_WIDTH) / 2 : 0;
+      initialXRef.current = newInitial;
+      // If scrollX has wrapped past the boundary, snap it back to the new start.
+      if (Math.abs(scrollX - newInitial) > CARD_WIDTH + CARD_GAP) {
+        setScrollX(newInitial);
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [scrollX]);
+
+  // Auto-advance the carousel: decrease scrollX by one card width + gap each interval.
+  // Wrap by resetting to initialXRef.current when past the last card.
+  useEffect(() => {
+    if (displayArticles.length <= 1) return undefined;
+    const timer = setInterval(() => {
+      setScrollX((prev) => {
+        const newX = prev - (CARD_WIDTH + CARD_GAP); // more negative = pan right visually
+        const maxScroll = -(displayArticles.length - 1) * (CARD_WIDTH + CARD_GAP);
+        // If we've scrolled past the last card, reset to start so the next interval pans right again.
+        return newX < maxScroll ? initialXRef.current : newX;
+      });
+    }, AUTO_ADVANCE_MS);
+    return () => clearInterval(timer);
+  }, [displayArticles.length]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col items-center justify-center w-full h-auto min-h-[400px] md:h-360 bg-background pt-7 gap-4"
+      className="flex flex-col w-full min-h-screen bg-background"
     >
+      {/* ARTWORK SECTION - takes ~90vh (accounting for browser chrome via svh) */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="w-full h-full px-4 sm:px-8 md:px-6"
+        className="relative w-full flex-shrink-0"
+        style={{ height: "100svh", minHeight: "700px" }}
       >
-        <div className="flex flex-row items-center justify-start w-full h-full min-h-[200px] md:h-full bg-[url('/assets/Kismet.png')] pl-4 pr-4 md:pl-10 md:pr-10 rounded-2xl bg-cover">
-          <div className="flex flex-col items-center justify-center w-full md:w-200 h-full">
-            <p className="text-2xl md:text-5xl font-['Hefring_Slab_Bold'] -mb-7 mr-70">the</p>
-            <p className="text-4xl md:text-9xl/24 font-['Hefring_Slab_Bold'] w-full md:w-120">central echo</p>
-            <p className="text-sm md:text-xl text-justify font-['NeueHaasGrotDisp'] mt-4 md:mt-10 w-full md:w-120">
-              LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD
-              TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA. UT ENIM AD MINIM
-              VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX
-              EA COMMODO CONSEQUAT. DUISM.
-            </p>
-          </div>
+        <div className="absolute inset-0 m-4 sm:m-6 md:m-8 bg-[url('/assets/Kismet.png')] bg-cover bg-center rounded-2xl" />
+        <div className="relative flex flex-col items-start justify-center w-full h-full px-4 sm:px-8 md:px-10 md:pl-20">
+          <p className="text-2xl md:text-5xl font-['Hefring_Slab_Bold'] -mb-4">the</p>
+          <p className="text-4xl md:text-9xl/24 font-['Hefring_Slab_Bold'] max-w-[800px]">central echo</p>
+          <p className="text-sm md:text-xl text-justify font-['NeueHaasGrotDisp'] mt-6 max-w-[800px]">
+            LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD
+            TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA. UT ENIM AD MINIM
+            VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX
+            EA COMMODO CONSEQUAT. DUISM.
+          </p>
         </div>
       </motion.div>
 
-      {/*CAROUSEL*/}
+      {/* LATEST TODAY SECTION - constrained to 80% width (10% margins each side) */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
-        className="flex flex-row items-center justify-center mt-10"
+        className="flex flex-row items-center justify-center w-full px-6 py-8"
       >
-        <div className="flex flex-row items-center justify-center border-2 border-text rounded-full w-[200px] h-[50px] gap-2">
-          <p className="text-xl font-['Hefring_Slab_Bold']">LATEST</p>
-          <p className="text-xl font-['Hefring_Slab_Regular']">TODAY</p>
+        <div className="w-full max-w-[80%] mx-auto flex flex-row items-center">
+          <div className="flex flex-row items-center gap-2 border-2 border-text rounded-full px-4 py-1.5 shrink-0">
+            <p className="text-xl font-['Hefring_Slab_Bold']">LATEST</p>
+            <p className="text-xl font-['Hefring_Slab_Regular']">TODAY</p>
+          </div>
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="bg-text h-[2px]"
+          />
         </div>
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="bg-text w-32 md:w-256 h-[2px]"
-        />
       </motion.div>
 
+      {/* CAROUSEL SECTION */}
       <motion.div
         initial="hidden"
         animate="visible"
@@ -58,16 +121,28 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
           hidden: { opacity: 0 },
           visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.15 },
+            transition: { staggerChildren: 0.15, delayChildren: 0.2 },
           },
         }}
-        className="flex flex-row items-center justify-center w-full h-auto md:h-[520px] mt-10 mb-10 gap-4 md:gap-12 overflow-x-auto md:overflow-x-clip"
+        className="flex flex-col items-center w-full px-4 pb-16"
       >
-        {articles.map((article) => (
-          <motion.div key={article.id} variants={{ hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0 } }}>
-            <CarouselCard article={article} />
+        <div ref={viewportRef} className="w-full overflow-x-hidden">
+          <motion.div
+            className="flex flex-row gap-6 px-4"
+            style={{ x: scrollX }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            {displayArticles.map((article) => (
+              <motion.div
+                key={article.id}
+                variants={{ hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0 } }}
+                className="shrink-0"
+              >
+                <CarouselCard article={article} />
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
+        </div>
       </motion.div>
     </motion.div>
   );
