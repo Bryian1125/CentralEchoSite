@@ -89,7 +89,7 @@ export default function Navbar() {
           whileTap={{ scale: 0.98 }}
           className="absolute left-[calc(50%-4px)] -translate-x-1/2 flex pl-3 pr-3 items-center justify-end rounded-full w-[33%] md:w-[44%] h-8"
           style={{
-            background: "linear-gradient(to bottom, var(--color-background) 33%, color-mix(in srgb, var(--color-primary) 12%, white) 100%)",
+            background: "var(--color-background)",
             border: "1.5px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
           }}
           aria-label="Search"
