@@ -54,20 +54,18 @@ export default function Navbar() {
   // The invisible hover strip only re-hides the bar once the user has
   // scrolled away from the top of the page.
   const handleTriggerLeave = () => {
-    setVisible(scrollY.get() < 10);
+    setVisible(false);
   };
 
   return (
     <>
       {/* Hover strip that reveals the bar after it hides on scroll.
-          Only rendered when navbar is hidden to prevent glitching.
-          Only triggers show when user is actually near top of page. */}
+          Covers upper 7% of viewport height. Only rendered when navbar is hidden. */}
       {!visible && (
         <div
-          className="fixed top-0 left-0 w-full h-30 z-1"
-          onMouseEnter={() => {
-            if (scrollY.get() < 10) setVisible(true);
-          }}
+          className="fixed top-0 left-0 w-full z-1"
+          style={{ height: "7vh" }}
+          onMouseEnter={() => setVisible(true)}
           onMouseLeave={handleTriggerLeave}
         />
       )}
