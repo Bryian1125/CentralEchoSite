@@ -126,7 +126,7 @@ export default function NavLinks({ onLinkClick }: NavLinksProps) {
           </motion.svg>
         </button>
 
-        <AnimatePresence initial={false}>
+        <AnimatePresence mode="popLayout">
           {categoriesOpen && (
             <motion.ul
               id="nav-categories-panel"
