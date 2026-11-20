@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, useScroll, useMotionValueEvent } from "motion/react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 import NavLinks from "./NavLinks";
 import SearchModal from "./SearchModal";
@@ -133,44 +133,47 @@ export default function Navbar() {
         </motion.button>
       </motion.div>
 
-      {mobileMenuOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-background/50 backdrop-blur-sm"
-            onClick={closeMobileMenu}
-            aria-hidden="true"
-          />
-          {/* Menu Panel */}
-          <motion.div
-            id="mobile-menu-panel"
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%", scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25, duration: 0.3 }}
-            className="fixed top-0 right-0 h-full w-full max-w-sm z-50 bg-background border-l border-border shadow-xl p-6 flex flex-col"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation menu"
-          >
-            <div className="flex justify-end mb-8">
-              <button
-                onClick={closeMobileMenu}
-                className="p-2 text-text hover:text-primary transition-colors"
-                aria-label="Close menu"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <NavLinks onLinkClick={closeMobileMenu} />
-          </motion.div>
-        </>
-      )}
+      <AnimatePresence mode="popLayout">
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-background/50 backdrop-blur-sm"
+              onClick={closeMobileMenu}
+              aria-hidden="true"
+            />
+            {/* Menu Panel */}
+            <motion.div
+              id="mobile-menu-panel"
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.25 }}
+              className="fixed top-0 right-0 h-full w-full max-w-sm z-50 bg-background border-l border-border shadow-xl p-6 flex flex-col"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Navigation menu"
+            >
+              <div className="flex justify-end mb-8">
+                <button
+                  onClick={closeMobileMenu}
+                  className="p-2 text-text hover:text-primary transition-colors"
+                  aria-label="Close menu"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <NavLinks onLinkClick={closeMobileMenu} />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
