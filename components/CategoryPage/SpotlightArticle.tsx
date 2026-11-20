@@ -20,7 +20,7 @@ export default function SpotlightArticle({ article }: SpotlightArticleProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
         whileHover={{ y: -8, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)", transition: { type: "spring", stiffness: 300, damping: 30 } }}
-        className="w-full max-w-4xl h-90 bg-secondary rounded-2xl relative overflow-clip text-left"
+        className="w-full max-w-6xl h-90 bg-secondary rounded-2xl relative overflow-clip text-left"
       >
         {/* Featured Image */}
         {article.image && (
