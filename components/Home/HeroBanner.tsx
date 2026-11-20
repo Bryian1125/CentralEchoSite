@@ -133,9 +133,9 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
             transition: { staggerChildren: 0.15, delayChildren: 0.2 },
           },
         }}
-        className="flex flex-col items-center w-full px-4 pb-16"
+        className="flex flex-col items-center w-full pb-16 overflow-x-hidden"
       >
-        <div ref={viewportRef} className="w-full pb-32">
+        <div ref={viewportRef} className="w-full pb-32 overflow-x-hidden">
           <motion.div
             className="flex flex-row gap-6 px-4"
             style={{ x: scrollX }}
