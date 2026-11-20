@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 type Category = {
@@ -54,22 +53,13 @@ export default function NavLinks({ onCategoryClick }: NavLinksProps) {
   }
 
   const handleCategoryClick = (href: string) => {
+    onCategoryClick?.(href);
     router.push(href);
   };
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Home */}
-      <Link
-        href="/"
-        className={`text-lg text-text transition-colors hover:text-primary relative ${
-          pathname === "/" ? "text-primary font-['Hefring_Slab_Bold']" : "font-['Hefring_Slab_Bold']"
-        }`}
-      >
-        Home
-      </Link>
-
-      {/* Categories - always visible, no accordion */}
+      {/* Categories - always visible, no accordion, no Home button */}
       <div>
         <h2 className="text-lg font-['Hefring_Slab_Bold'] text-text mb-2">CATEGORIES</h2>
         <ul className="flex flex-col gap-2 pl-4 mt-2">
@@ -77,14 +67,14 @@ export default function NavLinks({ onCategoryClick }: NavLinksProps) {
             const href = `/categories/${cat.slug}`;
             return (
               <li key={cat.slug}>
-                <Link
-                  href={href}
-                  className={`text-lg text-text transition-colors hover:text-primary font-['Hefring_Slab_Regular'] ${
+                <button
+                  onClick={() => handleCategoryClick(href)}
+                  className={`text-lg text-left text-text transition-colors hover:text-primary font-['Hefring_Slab_Regular'] w-full text-left ${
                     pathname === href ? "text-primary" : ""
                   }`}
                 >
                   {cat.name.toUpperCase()}
-                </Link>
+                </button>
               </li>
             );
           })}
