@@ -149,25 +149,23 @@ export default function Navbar() {
             id="mobile-menu-panel"
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            exit={{ opacity: 0, x: "100%", scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25, duration: 0.3 }}
             className="fixed top-0 right-0 h-full w-full max-w-sm z-50 bg-background border-l border-border shadow-xl p-6 flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"
           >
             <div className="flex justify-end mb-8">
-              <motion.button
+              <button
                 onClick={closeMobileMenu}
-                whileHover={{ scale: 1.15 }}
-                whileTap={{ scale: 0.85 }}
-                className="p-2 rounded-lg hover:bg-secondary transition-transform"
+                className="p-2 text-text hover:text-primary transition-colors"
                 aria-label="Close menu"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text">
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
-              </motion.button>
+              </button>
             </div>
             <NavLinks onLinkClick={closeMobileMenu} />
           </motion.div>
