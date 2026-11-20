@@ -36,12 +36,9 @@ export default function LargeDisplayCard({ article }: { article: Article }) {
         <div className="z-2 absolute inset-0 bg-gradient-to-t from-background to-transparent" />
 
         <div className="z-3 flex flex-col absolute bottom-0 left-0 right-0 p-6">
-          <motion.p
-            whileHover={{ x: 4 }}
-            className="text-text font-bold text-2xl font-['NeueHaasGrotDisp'] transition-colors line-clamp-2"
-          >
+          <p className="text-text font-bold text-2xl font-['NeueHaasGrotDisp'] line-clamp-2">
             {article.title}
-          </motion.p>
+          </p>
           <p className="text-text font-['Hefring_Slab_Bold']">by {article.author}</p>
           <p className="text-text font-['NeueHaasGrotDisp'] text-sm">{formatDate(article.date)}</p>
         </div>
