@@ -111,7 +111,7 @@ export default function NavLinks({ onLinkClick }: NavLinksProps) {
                 <Link
                   href={href}
                   onClick={handleLinkClick}
-                  className={`text-lg transition-colors hover:text-primary relative font-['Hefring_Slab_Regular'] ${
+                  className={`text-lg text-text transition-colors hover:text-primary relative font-['Hefring_Slab_Regular'] ${
                     isActive(href) ? "text-primary" : ""
                   }`}
                 >
