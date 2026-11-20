@@ -27,16 +27,21 @@ export default function Navbar() {
     };
   }, [mobileMenuOpen]);
 
+  // Scroll-based visibility logic - applies to ALL pages
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (pathname !== "/") { return }
-
-    if (latest < 10) {
+    // Always show at very top of page
+    if (latest < 50) {
       setVisible(true);
-    } else if (latest > lastScrollY.current) {
-      // Scrolling down — hide the bar.
+      lastScrollY.current = latest;
+      return;
+    }
+
+    // Scrolling down - hide
+    if (latest > lastScrollY.current) {
       setVisible(false);
-    } else {
-      // Scrolling up — bring the bar back.
+    } 
+    // Scrolling up - show
+    else if (latest < lastScrollY.current) {
       setVisible(true);
     }
     lastScrollY.current = latest;
@@ -51,16 +56,17 @@ export default function Navbar() {
     setMobileMenuOpen(false);
   };
 
-  // The invisible hover strip only re-hides the bar once the user has
-  // scrolled away from the top of the page.
+  // Hover strip leave handler - hide navbar unless at top of page
   const handleTriggerLeave = () => {
-    setVisible(false);
+    // Check current scroll position via scrollY motion value
+    if (scrollY.get() >= 50) {
+      setVisible(false);
+    }
   };
 
   return (
     <>
-      {/* Hover strip that reveals the bar after it hides on scroll.
-          Covers upper 7% of viewport height. Only rendered when navbar is hidden. */}
+      {/* Hover strip at top of viewport - shows navbar when hidden and mouse enters top 7% */}
       {!visible && (
         <div
           className="fixed top-0 left-0 w-full z-1"
@@ -74,9 +80,9 @@ export default function Navbar() {
         animate={{ y: visible ? 0 : "-150%" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className="fixed z-5 top-3 inset-x-4 md:inset-x-75 pl-3 pr-5 flex items-center justify-between h-13 gap-2 bg-background rounded-full shadow-lg"
-          style={{
-            border: "1px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
-          }}
+        style={{
+          border: "1px solid color-mix(in srgb, var(--color-primary) 15%, transparent)",
+        }}
       >
         <motion.button
           whileHover={{ scale: 1.05 }}
