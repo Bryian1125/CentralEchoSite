@@ -47,11 +47,7 @@ export default function CarouselCard({ article }: { article: Article }) {
               by {article.author}
             </p>
 
-            <motion.div
-              whileHover={{ x: 4 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="flex flex-row items-center justify-center gap-2"
-            >
+            <div className="flex flex-row items-center justify-center gap-2">
               <h1 className="text-2xl text-text font-['Hefring_Slab_Medium']">
                 READ MORE
               </h1>
@@ -61,7 +57,7 @@ export default function CarouselCard({ article }: { article: Article }) {
                 width={16}
                 height={16}
               />
-            </motion.div>
+            </div>
           </div>
         </div>
       </motion.div>
