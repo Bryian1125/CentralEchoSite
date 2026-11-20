@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
+import { usePathname, useRouter } from "next/navigation";
 
 type Category = {
   id: number;
@@ -14,13 +13,14 @@ type Category = {
 };
 
 interface NavLinksProps {
-  onLinkClick?: () => void;
+  onCategoryClick?: (href: string) => void;
 }
 
-export default function NavLinks({ onLinkClick }: NavLinksProps) {
+export default function NavLinks({ onCategoryClick }: NavLinksProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -39,10 +39,6 @@ export default function NavLinks({ onLinkClick }: NavLinksProps) {
     fetchCategories();
   }, []);
 
-  const handleLinkClick = () => {
-    onLinkClick?.();
-  };
-
   const isActive = (href: string) => pathname === href;
 
   if (loading) {
@@ -57,12 +53,15 @@ export default function NavLinks({ onLinkClick }: NavLinksProps) {
     );
   }
 
+  const handleCategoryClick = (href: string) => {
+    router.push(href);
+  };
+
   return (
     <div className="flex flex-col gap-3">
       {/* Home */}
       <Link
         href="/"
-        onClick={onLinkClick}
         className={`text-lg text-text transition-colors hover:text-primary relative ${
           pathname === "/" ? "text-primary font-['Hefring_Slab_Bold']" : "font-['Hefring_Slab_Bold']"
         }`}

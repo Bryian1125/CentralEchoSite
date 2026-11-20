@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 import NavLinks from "./NavLinks";
@@ -10,6 +10,7 @@ export default function Navbar() {
   const [visible, setVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const lastScrollY = useRef(0);
   const { scrollY } = useScroll();
   const pathname = usePathname();
@@ -52,13 +53,21 @@ export default function Navbar() {
     setMobileMenuOpen(false);
   };
 
-  const closeMobileMenu = () => {
+  const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
-  };
+  }, []);
+
+  // Handle category link click - animate out then navigate
+  const handleCategoryClick = useCallback((href: string) => {
+    setMobileMenuOpen(false);
+    // Wait for exit animation then navigate
+    setTimeout(() => {
+      router.push(href);
+    }, 200);
+  }, [router]);
 
   // Hover strip leave handler - hide navbar unless at top of page
   const handleTriggerLeave = () => {
-    // Check current scroll position via scrollY motion value
     if (scrollY.get() >= 50) {
       setVisible(false);
     }
@@ -72,7 +81,9 @@ export default function Navbar() {
           className="fixed top-0 left-0 w-full z-1"
           style={{ height: "7vh" }}
           onMouseEnter={() => setVisible(true)}
-          onMouseLeave={handleTriggerLeave}
+          onMouseLeave={() => {
+            if (scrollY.get() >= 50) setVisible(false);
+          }}
         />
       )}
 
@@ -143,7 +154,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-40 bg-background/50 backdrop-blur-sm"
-              onClick={closeMobileMenu}
+              onClick={() => setMobileMenuOpen(false)}
               aria-hidden="true"
             />
             {/* Menu Panel */}
@@ -152,7 +163,7 @@ export default function Navbar() {
               initial={{ opacity: 0, x: "100%" }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
-              transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.25 }}
+              transition={{ duration: 0.3, ease: [0.215, 0.61, 0.355, 1] }}
               className="fixed top-0 right-0 h-full w-full max-w-sm z-50 bg-background border-l border-border shadow-xl p-6 flex flex-col"
               role="dialog"
               aria-modal="true"
@@ -160,7 +171,7 @@ export default function Navbar() {
             >
               <div className="flex justify-end mb-8">
                 <button
-                  onClick={closeMobileMenu}
+                  onClick={() => setMobileMenuOpen(false)}
                   className="p-2 text-text hover:text-primary transition-colors"
                   aria-label="Close menu"
                 >
@@ -169,7 +180,7 @@ export default function Navbar() {
                   </svg>
                 </button>
               </div>
-              <NavLinks onLinkClick={closeMobileMenu} />
+              <NavLinks onCategoryClick={closeMobileMenu} />
             </motion.div>
           </>
         )}
