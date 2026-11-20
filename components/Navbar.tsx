@@ -159,9 +159,9 @@ export default function Navbar() {
             <div className="flex justify-end mb-8">
               <motion.button
                 onClick={closeMobileMenu}
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-2 rounded-lg hover:bg-secondary transition-colors"
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.85 }}
+                className="p-2 rounded-lg hover:bg-secondary transition-transform"
                 aria-label="Close menu"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text">

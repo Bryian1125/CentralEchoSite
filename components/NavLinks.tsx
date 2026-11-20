@@ -45,90 +45,52 @@ export default function NavLinks({ onLinkClick }: NavLinksProps) {
 
   const isActive = (href: string) => pathname === href;
 
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 },
-  };
-
   if (loading) {
     return (
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: { opacity: 0 },
-          visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-        }}
-        className="flex flex-col gap-3"
-      >
-        <motion.div variants={itemVariants} className="text-lg font-['Hefring_Slab_Bold'] animate-pulse">Home</motion.div>
-        <motion.div variants={itemVariants} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-        <motion.div variants={itemVariants} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-        <motion.div variants={itemVariants} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-        <motion.div variants={itemVariants} className="h-7 w-24 bg-text/10 rounded animate-pulse" />
-      </motion.div>
+      <div className="flex flex-col gap-3 animate-pulse">
+        <div className="text-lg font-['Hefring_Slab_Bold']">Home</div>
+        <div className="h-7 w-24 bg-text/10 rounded" />
+        <div className="h-7 w-24 bg-text/10 rounded" />
+        <div className="h-7 w-24 bg-text/10 rounded" />
+        <div className="h-7 w-24 bg-text/10 rounded" />
+      </div>
     );
   }
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-      }}
-      className="flex flex-col gap-3"
-    >
+    <div className="flex flex-col gap-3">
       {/* Home */}
-      <motion.div variants={itemVariants}>
-        <Link
-          href="/"
-          onClick={handleLinkClick}
-          className={`text-lg transition-colors hover:text-primary relative ${
-            isActive("/") ? "text-primary font-['Hefring_Slab_Bold']" : "font-['Hefring_Slab_Bold']"
-          }`}
-        >
-          Home
-          {isActive("/") && (
-            <motion.div
-              layoutId="active-indicator"
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full"
-            />
-          )}
-        </Link>
-      </motion.div>
+      <Link
+        href="/"
+        onClick={onLinkClick}
+        className={`text-lg text-text transition-colors hover:text-primary relative ${
+          pathname === "/" ? "text-primary font-['Hefring_Slab_Bold']" : "font-['Hefring_Slab_Bold']"
+        }`}
+      >
+        Home
+      </Link>
 
       {/* Categories - always visible, no accordion */}
-      <motion.div variants={itemVariants}>
+      <div>
         <h2 className="text-lg font-['Hefring_Slab_Bold'] text-text mb-2">CATEGORIES</h2>
-        <motion.ul className="flex flex-col gap-2 pl-4 mt-2">
+        <ul className="flex flex-col gap-2 pl-4 mt-2">
           {categories.map((cat) => {
             const href = `/categories/${cat.slug}`;
             return (
-              <motion.li key={cat.slug} variants={itemVariants}>
+              <li key={cat.slug}>
                 <Link
                   href={href}
-                  onClick={handleLinkClick}
-                  className={`text-lg text-text transition-colors hover:text-primary relative font-['Hefring_Slab_Regular'] ${
-                    isActive(href) ? "text-primary" : ""
+                  className={`text-lg text-text transition-colors hover:text-primary font-['Hefring_Slab_Regular'] ${
+                    pathname === href ? "text-primary" : ""
                   }`}
                 >
                   {cat.name.toUpperCase()}
-                  {isActive(href) && (
-                    <motion.div
-                      layoutId="active-indicator"
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full"
-                    />
-                  )}
                 </Link>
-              </motion.li>
+              </li>
             );
           })}
-        </motion.ul>
-      </motion.div>
-    </motion.div>
+        </ul>
+      </div>
+    </div>
   );
 }
