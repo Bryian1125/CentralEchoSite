@@ -59,13 +59,18 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Hover strip that reveals the bar after it hides on scroll. It sits
-          BELOW the navbar (z-1 < z-5) so it never intercepts navbar clicks. */}
-      <div
-        className="fixed top-0 left-0 w-full h-30 z-1"
-        onMouseEnter={() => setVisible(true)}
-        onMouseLeave={handleTriggerLeave}
-      />
+      {/* Hover strip that reveals the bar after it hides on scroll.
+          Only rendered when navbar is hidden to prevent glitching.
+          Only triggers show when user is actually near top of page. */}
+      {!visible && (
+        <div
+          className="fixed top-0 left-0 w-full h-30 z-1"
+          onMouseEnter={() => {
+            if (scrollY.get() < 10) setVisible(true);
+          }}
+          onMouseLeave={handleTriggerLeave}
+        />
+      )}
 
       <motion.div
         animate={{ y: visible ? 0 : "-150%" }}
