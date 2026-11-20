@@ -83,7 +83,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             <>
               <SectionHeader title="SPOTLIGHT ARTICLE" />
               {spotlight && <SpotlightArticle article={spotlight} />}
-              
               {moreArticles.length > 0 && (
                 <>
                   <SectionHeader title="MORE ARTICLES" />
