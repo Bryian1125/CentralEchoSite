@@ -16,9 +16,9 @@ export default function ArticleCard({ article }: ArticleProps) {
   return (
     <Link href={article.href} className="block">
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
+        transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
         whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", transition: { type: "spring", stiffness: 300, damping: 30 } }}
         className="h-80 w-full bg-secondary rounded-2xl relative overflow-clip text-left"
       >
@@ -43,12 +43,9 @@ export default function ArticleCard({ article }: ArticleProps) {
           <span className="inline-block w-fit px-2 py-0.5 text-xs font-['Hefring_Slab_Bold'] uppercase tracking-wider bg-primary text-background rounded-full mb-2">
             {article.category}
           </span>
-          <motion.h3
-            whileHover={{ x: 4, color: "var(--color-primary)" }}
-            className="text-text font-bold text-lg font-['NeueHaasGrotDisp'] mb-1 transition-colors line-clamp-2"
-          >
+          <h3 className="text-text font-bold text-lg font-['NeueHaasGrotDisp'] mb-1 line-clamp-2">
             {article.title}
-          </motion.h3>
+          </h3>
           <div className="flex flex-wrap items-center gap-2 text-text/70 font-['NeueHaasGrotDisp'] text-xs">
             <span>By {article.author}</span>
             <span>·</span>
