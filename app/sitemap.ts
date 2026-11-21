@@ -4,10 +4,17 @@ import { getAllArticles, getCategories } from "@/lib/posts";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [articles, categories] = await Promise.all([
-    getAllArticles(1000),
-    getCategories(),
-  ]);
+  let articles: Awaited<ReturnType<typeof getAllArticles>> = [];
+  let categories: Awaited<ReturnType<typeof getCategories>> = [];
+
+  try {
+    [articles, categories] = await Promise.all([
+      getAllArticles(1000),
+      getCategories(),
+    ]);
+  } catch (error) {
+    console.warn("Failed to fetch WordPress data for sitemap, using static URLs only:", error);
+  }
 
   const articleUrls = articles.map((article) => ({
     url: `${BASE_URL}${article.href}`,

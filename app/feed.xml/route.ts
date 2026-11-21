@@ -3,7 +3,13 @@ import { getAllArticles } from "@/lib/posts";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export async function GET() {
-  const articles = await getAllArticles(50);
+  let articles: Awaited<ReturnType<typeof getAllArticles>> = [];
+
+  try {
+    articles = await getAllArticles(50);
+  } catch (error) {
+    console.warn("Failed to fetch WordPress data for RSS feed:", error);
+  }
 
   const rssItems = articles
     .map((article) => {

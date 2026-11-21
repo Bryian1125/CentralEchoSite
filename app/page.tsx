@@ -1,7 +1,7 @@
 import HeroBanner from "../components/Home/HeroBanner"
 import CategoryDisplay from "../components/Home/CategoryDisplay"
 import LiteraryDisplay from "../components/Home/LiteraryDisplay"
-import { getLatestArticles, getArticlesByCategory } from "@/lib/posts"
+import { getLatestArticles, getArticlesByCategory, getFeaturedArticles } from "@/lib/posts"
 
 const CATEGORY_SLUGS = {
   OPINION: "opinion",
@@ -13,9 +13,9 @@ const CATEGORY_SLUGS = {
 export default async function App() {
   // Fetch all data in parallel
   const [latestArticles, opinionArticles, featureArticles, literaryArticles, sportsArticles] = await Promise.all([
-    getLatestArticles(3),
+    getLatestArticles(5), // 5 most recent for carousel
     getArticlesByCategory(CATEGORY_SLUGS.OPINION, 3),
-    getArticlesByCategory(CATEGORY_SLUGS.FEATURE, 3),
+    getFeaturedArticles(CATEGORY_SLUGS.FEATURE, 3), // Only featured articles for Feature category
     getArticlesByCategory(CATEGORY_SLUGS.LITERARY, 6),
     getArticlesByCategory(CATEGORY_SLUGS.SPORTS, 3),
   ]);

@@ -12,10 +12,9 @@ import type { WPMedia, WPPost } from "./types";
 const API_URL = (process.env.WORDPRESS_API_URL ?? "").replace(/\/+$/, "");
 
 const ENTITIES: Record<string, string> = {
-    "&amp;": "&",
-    "&lt;": "<",
-    "&gt;": ">",
-    "&quot;": '"',
+    "&": "&",
+    "<": "<",
+    ">": ">",
     "&#039;": "'",
     "&#8217;": "\u2019",
     "&#8216;": "\u2018",
@@ -54,6 +53,9 @@ export function mapPostToArticle(post: WPPost): Article {
         ?.flat()
         .find((term) => term.taxonomy === "category");
 
+    // Normalize category name to uppercase for consistent display/comparison
+    const categoryName = category?.name?.toUpperCase() ?? "";
+
     return {
         id: post.id,
         slug: post.slug,
@@ -61,7 +63,7 @@ export function mapPostToArticle(post: WPPost): Article {
         excerpt: decodeHtml(post.excerpt?.rendered),
         author,
         date: post.date,
-        category: category?.name ?? "",
+        category: categoryName,
         href: `/articles/${post.slug}`,
         featured: post.sticky ?? false,
         image: getFeaturedImage(post),
@@ -83,11 +85,50 @@ export function mapPostToArticleWithContent(post: WPPost): ArticleWithContent {
   };
 }
 
+/** WordPress Category type for navigation. */
+export type WPCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  count: number;
+  link: string;
+};
+
+/** In-memory cache for category slug -> ID mapping. */
+let categorySlugToIdCache: Map<string, number> | null = null;
+let categoryCacheTimestamp = 0;
+const CATEGORY_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+/** Build category slug -> ID mapping. */
+async function buildCategorySlugMap(): Promise<Map<string, number>> {
+  const now = Date.now();
+  if (categorySlugToIdCache && now - categoryCacheTimestamp < CATEGORY_CACHE_TTL) {
+    return categorySlugToIdCache;
+  }
+
+  const categories = await getCategories();
+  const map = new Map<string, number>();
+  for (const cat of categories) {
+    map.set(cat.slug.toLowerCase(), cat.id);
+  }
+  categorySlugToIdCache = map;
+  categoryCacheTimestamp = now;
+  return map;
+}
+
+/** Get category ID from slug. */
+async function getCategoryIdBySlug(slug: string): Promise<number | null> {
+  const map = await buildCategorySlugMap();
+  return map.get(slug.toLowerCase()) ?? null;
+}
+
 export type FetchPostsOptions = {
     /** Maximum number of posts to return. */
     perPage?: number;
-    /** Filter by category slug (WordPress `category_name`). */
+    /** Filter by category slug (resolved to category ID). */
     categorySlug?: string;
+    /** Filter by category ID directly. */
+    categoryId?: number;
     /** Fetch a single post by slug. */
     slug?: string;
     /** Page number for pagination (1-indexed). */
@@ -108,8 +149,15 @@ export async function fetchPosts(options: FetchPostsOptions = {}): Promise<WPPos
     if (options.perPage) {
         query.set("per_page", String(options.perPage));
     }
-    if (options.categorySlug) {
-        query.set("category_name", options.categorySlug);
+    // Prefer categoryId if provided, otherwise resolve categorySlug to ID
+    if (options.categoryId) {
+        query.set("categories", String(options.categoryId));
+    } else if (options.categorySlug) {
+        const categoryId = await getCategoryIdBySlug(options.categorySlug);
+        if (categoryId) {
+            query.set("categories", String(categoryId));
+        }
+        // If categoryId not found, don't add filter (will return all posts)
     }
     if (options.slug) {
         query.set("slug", options.slug);
@@ -121,7 +169,7 @@ export async function fetchPosts(options: FetchPostsOptions = {}): Promise<WPPos
         query.set("exclude", options.exclude.join(","));
     }
 
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?${query}`, {
+    const response = await fetch(`${API_URL}/posts?${query}`, {
         next: { revalidate: 60 },
     });
 
@@ -155,7 +203,7 @@ export async function getArticleBySlugWithContent(slug: string): Promise<Article
     throw new Error("WORDPRESS_API_URL is not set.");
   }
 
-  const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed=true`, {
+  const response = await fetch(`${API_URL}/posts?slug=${slug}&_embed=true`, {
     next: { revalidate: 60 },
   });
 
@@ -169,22 +217,13 @@ export async function getArticleBySlugWithContent(slug: string): Promise<Article
   return post ? mapPostToArticleWithContent(post) : null;
 }
 
-/** WordPress Category type for navigation. */
-export type WPCategory = {
-  id: number;
-  name: string;
-  slug: string;
-  count: number;
-  link: string;
-};
-
 /** Fetch all categories from WordPress for navigation. */
 export async function getCategories(): Promise<WPCategory[]> {
   if (!API_URL) {
     throw new Error("WORDPRESS_API_URL is not set.");
   }
 
-  const response = await fetch(`${API_URL}/wp-json/wp/v2/categories?per_page=100`, {
+  const response = await fetch(`${API_URL}/categories?per_page=100`, {
     next: { revalidate: 3600 }, // Cache for 1 hour
   });
 

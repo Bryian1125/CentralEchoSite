@@ -2,7 +2,7 @@
 
 import type { Article } from "@/lib/content";
 import CarouselCard from "./CarouselCard";
-import { motion } from "motion/react";
+import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 /** Width of a single carousel card (matches CarouselCard's fixed width). */
@@ -13,10 +13,8 @@ const CARD_GAP = 24;
 const AUTO_ADVANCE_MS = 7000;
 
 export default function HeroBanner({ articles }: { articles: Article[] }) {
-  // Only featured articles (sticky posts in the CMS) appear in the carousel.
-  // Fall back to all articles if none are marked featured so it never empties.
-  const featuredArticles = articles.filter((article) => article.featured);
-  const displayArticles = featuredArticles.length > 0 ? featuredArticles : articles;
+  // Carousel shows the 5 most recent articles (passed from getLatestArticles).
+  const displayArticles = articles.slice(0, 5);
 
   // Ensure page scrolls to top on mount to prevent default scroll offset
   useEffect(() => {
@@ -25,11 +23,8 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
 
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  // scrollX is the translateX value of the carousel track (pixels).
-  // Negative values shift the track left, making cards appear to move right (pan right).
-  // Initialize to 0 on both server and client to avoid hydration mismatch.
-  // The correct centered value is set in useEffect after hydration.
-  const [scrollX, setScrollX] = useState(0);
+  // scrollX is a motion value for smooth animated transitions
+  const scrollX = useMotionValue(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Use a ref for the centered start position so it can be updated on resize
@@ -41,7 +36,7 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
     setIsHydrated(true);
     const initial = (window.innerWidth - CARD_WIDTH) / 2;
     initialXRef.current = initial;
-    setScrollX(initial);
+    scrollX.set(initial);
   }, []);
 
   // Keep initialXRef in sync with viewport size on resize.
@@ -50,28 +45,30 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
       const newInitial = (window.innerWidth - CARD_WIDTH) / 2;
       initialXRef.current = newInitial;
       // If scrollX has wrapped past the boundary, snap it back to the new start.
-      if (Math.abs(scrollX - newInitial) > CARD_WIDTH + CARD_GAP) {
-        setScrollX(newInitial);
+      if (Math.abs(scrollX.get() - newInitial) > CARD_WIDTH + CARD_GAP) {
+        scrollX.set(newInitial);
       }
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [scrollX]);
+  }, []);
 
   // Auto-advance the carousel: decrease scrollX by one card width + gap each interval.
   // Wrap by resetting to initialXRef.current when past the last card.
   useEffect(() => {
     if (displayArticles.length <= 1) return undefined;
     const timer = setInterval(() => {
-      setScrollX((prev) => {
-        const newX = prev - (CARD_WIDTH + CARD_GAP); // more negative = pan right visually
+      const currentX = scrollX.get();
+        const newX = currentX - (CARD_WIDTH + CARD_GAP); // more negative = pan right visually
         const maxScroll = -(displayArticles.length - 1) * (CARD_WIDTH + CARD_GAP);
         // If we've scrolled past the last card, reset to start so the next interval pans right again.
-        return newX < maxScroll ? initialXRef.current : newX;
-      });
+        scrollX.set(newX < maxScroll ? initialXRef.current : newX);
     }, AUTO_ADVANCE_MS);
     return () => clearInterval(timer);
   }, [displayArticles.length]);
+
+  // Spring animation for smooth transitions
+  const animatedX = useSpring(scrollX, { stiffness: 300, damping: 30 });
 
   return (
     <motion.div
@@ -133,13 +130,12 @@ export default function HeroBanner({ articles }: { articles: Article[] }) {
             transition: { staggerChildren: 0.15, delayChildren: 0.2 },
           },
         }}
-        className="flex flex-col items-center w-full pb-16 overflow-x-hidden"
+        className="flex flex-col items-center w-full pb-8 overflow-x-hidden"
       >
-        <div ref={viewportRef} className="w-full pb-32 overflow-x-hidden">
+        <div ref={viewportRef} className="w-full pb-8 overflow-x-hidden">
           <motion.div
             className="flex flex-row gap-6 px-4"
-            style={{ x: scrollX }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            style={{ x: animatedX }}
           >
             {displayArticles.map((article) => (
               <motion.div

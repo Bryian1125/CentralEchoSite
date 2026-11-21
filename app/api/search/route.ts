@@ -1,39 +1,8 @@
 import { NextResponse } from "next/server";
-import { latestArticles, placeholderArticles } from "@/lib/mock/articles";
 import type { WPPost } from "@/lib/wordpress/types";
 import { mapPostToArticle } from "@/lib/wordpress/api";
 
 const API_URL = (process.env.WORDPRESS_API_URL ?? "").replace(/\/+$/, "");
-
-const MOCK_CATEGORY_SLUGS = ["opinion", "feature", "literary", "sports"];
-
-/** Offline search used when no WordPress URL is configured (development). */
-function searchMockArticles(query: string) {
-  const q = query.toLowerCase();
-  const articles = [
-    ...latestArticles,
-    ...MOCK_CATEGORY_SLUGS.flatMap((slug) => placeholderArticles(5, slug)),
-  ];
-
-  return articles
-    .filter(
-      (article) =>
-        article.title.toLowerCase().includes(q) ||
-        article.slug.includes(q) ||
-        article.category.toLowerCase().includes(q)
-    )
-    .slice(0, 10)
-    .map((article, index) => ({
-      // Re-index so combined mock results stay unique for React keys.
-      id: index + 1,
-      title: article.title,
-      excerpt: article.excerpt,
-      slug: article.slug,
-      href: article.href,
-      category: article.category,
-      image: article.image,
-    }));
-}
 
 // Simple in-memory rate limiter (use Redis in production)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -75,7 +44,8 @@ export async function GET(request: Request) {
   }
 
   if (!API_URL) {
-    return NextResponse.json(searchMockArticles(query));
+    // No WordPress configured - return empty results
+    return NextResponse.json([]);
   }
 
   try {
